@@ -18,6 +18,9 @@ task jarServer(type: Jar) {
     manifest {
         attributes('Main-Class': 'edu.sjsu.cs249.project1.server.Server')
     }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
     with jar
     doLast {
         println "Packing done. See resulting server jar inside ./build/libs"
@@ -28,6 +31,9 @@ task jarClient(type: Jar) {
     baseName = 'client'
     manifest {
         attributes('Main-Class': 'edu.sjsu.cs249.project1.client.Client')
+    }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
     with jar
     doLast {
