@@ -1,5 +1,5 @@
 group 'edu.sjsu.cs249'
-version '1.0-SNAPSHOT'
+version '0.1'
 
 apply plugin: 'java'
 
@@ -11,4 +11,26 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+task jarServer(type: Jar) {
+    baseName = 'server'
+    manifest {
+        attributes('Main-Class': 'edu.sjsu.cs249.project1.server.Server')
+    }
+    with jar
+    doLast {
+        println "Packing done. See resulting server jar inside ./build/libs"
+    }
+}
+
+task jarClient(type: Jar) {
+    baseName = 'client'
+    manifest {
+        attributes('Main-Class': 'edu.sjsu.cs249.project1.client.Client')
+    }
+    with jar
+    doLast {
+        println "Packing done. See resulting client jar inside ./build/libs"
+    }
 }
