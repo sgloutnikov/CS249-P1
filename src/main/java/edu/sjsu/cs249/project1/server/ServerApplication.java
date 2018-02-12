@@ -1,9 +1,12 @@
 package edu.sjsu.cs249.project1.server;
 
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
 public class ServerApplication {
 
     public static void main(final String[] args) {
-        // TODO: On start prompt for bind address and port
         /**
          * We need to determine the flow of events. David's thoughts: <br/>
          * 1. If the client invokes a read operation, then the client is responsible for caching and registering the
@@ -16,6 +19,12 @@ public class ServerApplication {
          * 3. Server can expose 5 RMI methods - Create, Delete, Read, Modify, and Register Cache. <br/>
          * 4. Client can expose 1 RMI method - Delete Cache.
          */
-        System.out.println("Hello Server...");
+        System.out.println("+ Server Started +");
+        try {
+            Registry registry = LocateRegistry.createRegistry(5099);
+            registry.rebind("fileService", new FileServer());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 }
