@@ -1,5 +1,6 @@
 package edu.sjsu.cs249.project1.server;
 
+import edu.sjsu.cs249.project1.remote.ClientCallback;
 import edu.sjsu.cs249.project1.remote.FileServerService;
 
 import java.rmi.RemoteException;
@@ -12,6 +13,17 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
 
     public FileServer() throws RemoteException {
         super();
+    }
+
+    @Override
+    public void register(ClientCallback client) throws RemoteException {
+        System.out.println("Registered " + client.getId());
+        //TODO: Implement tracking of client on the server side
+    }
+
+    @Override
+    public void unRegister(ClientCallback client) throws RemoteException {
+
     }
 
     @Override

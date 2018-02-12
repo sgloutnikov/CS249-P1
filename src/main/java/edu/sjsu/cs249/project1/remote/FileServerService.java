@@ -10,6 +10,8 @@ import java.rmi.RemoteException;
 public interface FileServerService extends Remote {
 
     //TODO: Register clients for server to client push
+    void register(ClientCallback client) throws RemoteException;
+    void unRegister(ClientCallback client) throws RemoteException;
     void hello(String msg) throws RemoteException;
     String version() throws RemoteException;
 
