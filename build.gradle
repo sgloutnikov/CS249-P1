@@ -16,7 +16,7 @@ dependencies {
 task jarServer(type: Jar) {
     baseName = 'server'
     manifest {
-        attributes('Main-Class': 'edu.sjsu.cs249.project1.server.Server')
+        attributes('Main-Class': 'edu.sjsu.cs249.project1.server.ServerApplication')
     }
     from {
         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
@@ -30,7 +30,7 @@ task jarServer(type: Jar) {
 task jarClient(type: Jar) {
     baseName = 'client'
     manifest {
-        attributes('Main-Class': 'edu.sjsu.cs249.project1.client.Client')
+        attributes('Main-Class': 'edu.sjsu.cs249.project1.client.ClientApplication')
     }
     from {
         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
