@@ -9,6 +9,7 @@ import java.rmi.RemoteException;
  */
 public interface FileServerService extends Remote {
 
+    //TODO: Register clients for server to client push
     void hello(String msg) throws RemoteException;
     String version() throws RemoteException;
 
