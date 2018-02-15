@@ -52,7 +52,7 @@ public class FileSystem {
             if (!this.fileMap.containsKey(fileName)) {
                 this.fileMap.put(fileName, new File(data));
             } else {
-                throw new FileException("File with this name already exists.");
+                throw new FileException("File with name " + fileName + " already exists.");
             }
         } else {
             throw new FileException("Both a file name and data are required to create a new file.");
@@ -94,7 +94,7 @@ public class FileSystem {
                      */
                     ClientCacheManager.getInstance().sendCacheInvalidationEventToAllClients(fileName);
                 } else {
-                    throw new FileException("A file with this name does not exist and therefore cannot be deleted.");
+                    throw new FileException("No file with name " + fileName + " exists and therefore cannot be deleted.");
                 }
             }
         } else {
@@ -127,7 +127,7 @@ public class FileSystem {
                  */
                 return file.read();
             } else {
-                throw new FileException("A file with this name does not exist and therefore cannot be read.");
+                throw new FileException("No file with name " + fileName + " exists and therefore cannot be read.");
             }
         } else {
             throw new FileException("A file name is required to read a file.");
@@ -166,7 +166,7 @@ public class FileSystem {
                     ClientCacheManager.getInstance().sendCacheInvalidationEventToAllClients(fileName);
                 }
             } else {
-                throw new FileException("A file with this name does not exist and therefore cannot be modified.");
+                throw new FileException("No file with name " + fileName + " exists and therefore cannot be modified.");
             }
         } else {
             throw new FileException("Both a file name and data are required to modify an existing file.");
