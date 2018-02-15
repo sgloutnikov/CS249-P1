@@ -60,7 +60,7 @@ public class File {
         this.lock.writeLock().lock();
         try {
             if (this.isActive) {
-                if (((this.data != null) && !this.data.equals(newData)) || ((this.data == null) && (newData != null))) {
+                if (((this.data != null) && !Arrays.equals(this.data, newData)) || ((this.data == null) && (newData != null))) {
                     this.data = newData;
                     return true;
                 } else {
