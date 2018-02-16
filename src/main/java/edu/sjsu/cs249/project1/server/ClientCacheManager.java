@@ -1,7 +1,5 @@
 package edu.sjsu.cs249.project1.server;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
-
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -127,5 +125,5 @@ public class ClientCacheManager {
             throw new CacheException("ID is required to unregister a client.");
         }
     }
-    
+
 }
