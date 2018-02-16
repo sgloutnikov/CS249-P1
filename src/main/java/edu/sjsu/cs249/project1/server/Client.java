@@ -51,7 +51,7 @@ public class Client {
      */
     public synchronized void sendCacheInvalidationEvent(final String fileName) {
         try {
-            // TODO Implement me!
+            callback.invalidateCache(fileName);
         } catch (final Exception e) {
             /**
              * Note: Exceptions need to be handled within this method itself, as we don't want one client failure to
