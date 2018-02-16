@@ -17,13 +17,22 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
 
     @Override
     public void register(ClientCallback client) throws RemoteException {
-        System.out.println("Registered " + client.getId());
-        //TODO: Implement tracking of client on the server side
+        String clientId = client.getId();
+        Client c = new Client(clientId, client);
+        try {
+            ClientCacheManager.getInstance().registerClient(clientId, c);
+        } catch (CacheException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void unRegister(ClientCallback client) throws RemoteException {
-
+    public void unregister(ClientCallback client) throws RemoteException {
+        try {
+            ClientCacheManager.getInstance().unregisterClient(client.getId());
+        } catch (CacheException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

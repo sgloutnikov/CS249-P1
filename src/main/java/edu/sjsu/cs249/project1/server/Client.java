@@ -1,5 +1,7 @@
 package edu.sjsu.cs249.project1.server;
 
+import edu.sjsu.cs249.project1.remote.ClientCallback;
+
 /**
  * This class represents a Client as viewed by the server.
  *
@@ -7,16 +9,19 @@ package edu.sjsu.cs249.project1.server;
  */
 public class Client {
     private final String name;
-    // TODO Add the attributes used to invoke RMI on client.
+    private ClientCallback callback;
 
     /**
      * Instantiates a new Client object with the given name.
      *
      * @param name
      *            The name of the client.
+     * @param callback
+     *            The callback for this client. Used to reach the client from the server.
      */
-    public Client(final String name) {
+    public Client(final String name, ClientCallback callback) {
         this.name = name;
+        this.callback = callback;
     }
 
     /*
@@ -67,5 +72,9 @@ public class Client {
      */
     private boolean stringsAreEqual(final String str1, final String str2) {
         return ((str1 != null) && str1.equals(str2)) || ((str1 == null) && (str2 == null));
+    }
+
+    public ClientCallback getCallback() {
+        return callback;
     }
 }

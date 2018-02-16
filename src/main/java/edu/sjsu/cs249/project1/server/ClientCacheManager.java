@@ -1,5 +1,7 @@
 package edu.sjsu.cs249.project1.server;
 
+import com.sun.org.apache.xpath.internal.SourceTree;
+
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -19,6 +21,12 @@ public class ClientCacheManager {
      * Structure: file name -> set of clients who have the file cached.
      */
     private final Map<String, Set<Client>> clientCacheMap = new ConcurrentHashMap<>();
+
+    /**
+     * Structure: client ID -> client. Anyone registered with the server is tracked here.
+     *
+     */
+    private final Map<String, Client> registeredClientsMap = new ConcurrentHashMap<>();
 
     /**
      * Singleton class, hide constructor by making it private.
@@ -101,4 +109,23 @@ public class ClientCacheManager {
             }
         }
     }
+
+    public void registerClient(String id, Client client) throws CacheException {
+        if (id != null && client != null) {
+            this.registeredClientsMap.put(id, client);
+            System.out.println("Client Registered: " + id + " with callback: " + client.getCallback());
+        } else {
+            throw new CacheException("ID and Client are required to register a client.");
+        }
+    }
+
+    public void unregisterClient(String id) throws CacheException {
+        if (id != null) {
+            this.registeredClientsMap.remove(id);
+            System.out.println(registeredClientsMap.size());
+        } else {
+            throw new CacheException("ID is required to unregister a client.");
+        }
+    }
+    
 }
