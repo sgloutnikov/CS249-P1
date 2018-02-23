@@ -7,18 +7,16 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Random;
 import java.util.Scanner;
 
 public class ClientApplication {
 
     public static void main(final String[] args) throws RemoteException, NotBoundException, MalformedURLException {
         Scanner scanner = new Scanner(System.in);
-        Random random = new Random();
         System.out.print("Enter a valid client port number: ");
         int port = scanner.nextInt();
 
-        Client client1 = new Client("client-" + random.nextInt());
+        Client client1 = new Client("client-" + System.currentTimeMillis()/1000L);
         UnicastRemoteObject.exportObject(client1, port);
         FileServerService serverService = (FileServerService) Naming.lookup("rmi://localhost:5099/fileService");
         serverService.register(client1);
