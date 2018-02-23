@@ -120,7 +120,8 @@ public class ClientCacheManager {
     public void unregisterClient(String id) throws CacheException {
         if (id != null) {
             this.registeredClientsMap.remove(id);
-            System.out.println(registeredClientsMap.size());
+            System.out.println("Client Unregistered: " + id);
+            System.out.println("Now tracking " + registeredClientsMap.size() + " clients.");
         } else {
             throw new CacheException("ID is required to unregister a client.");
         }
