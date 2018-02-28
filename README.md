@@ -10,7 +10,7 @@ Client: 'gradle/gradlew jarClinet'
 Server: 'gradle/gradlew jarServer'
 
 
-Group members:
+### Group members:
 
 - [David Fisher](https://github.com/fisherdavidedward)
 - [Stefan Gloutnikov](https://github.com/sgloutnikov)
