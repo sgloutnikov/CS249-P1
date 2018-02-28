@@ -5,9 +5,9 @@ Import as a Gradle Project into your favorite IDE.
 
 Build executable JAR with:
 
-'gradle/gradlew jarClinet' 
+Client: 'gradle/gradlew jarClinet' 
 
-'gradle/gradlew jarServer'
+Server: 'gradle/gradlew jarServer'
 
 
 Group members:
