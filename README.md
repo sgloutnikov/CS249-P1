@@ -1,7 +1,7 @@
 # CS249-P1
  SJSU CS249 Project 1 - Stateless File Server with Client Side Cache 
 
-Import as a Gradle Project into your favorite IDE.
+### Building (Gradle)
 
 Build executable JAR with:
 
