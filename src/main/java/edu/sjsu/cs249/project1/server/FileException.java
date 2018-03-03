@@ -12,6 +12,10 @@ public class FileException extends Exception {
         super(message);
     }
 
+    public FileException(final Throwable cause) {
+        super(cause);
+    }
+
     public FileException(final String message, final Throwable cause) {
         super(message, cause);
     }

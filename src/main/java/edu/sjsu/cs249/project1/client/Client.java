@@ -1,21 +1,18 @@
 package edu.sjsu.cs249.project1.client;
 
 import edu.sjsu.cs249.project1.remote.ClientCallback;
-import edu.sjsu.cs249.project1.server.File;
 
 import java.util.HashMap;
 
 public class Client implements ClientCallback {
 
     private String clientId;
-    private HashMap<String, Boolean> cacheValidationMap;
-    private HashMap<String, File> cacheMap;
+    private HashMap<String, File> fileMap;
 
 
     public Client(String clientId) {
         this.clientId = clientId;
-        cacheValidationMap = new HashMap<>();
-        cacheMap = new HashMap<>();
+        fileMap = new HashMap<>();
     }
 
     @Override
@@ -26,8 +23,10 @@ public class Client implements ClientCallback {
     @Override
     public void invalidateCache(String file) {
         System.out.println("Received invalidate cache from server for: " + file);
-        if (cacheValidationMap.get(file) != null) {
-            cacheValidationMap.put(file, false);
+        File cachedFile = fileMap.get(file);
+        if (cachedFile != null) {
+            cachedFile.setValid(false);
+            fileMap.put(file, cachedFile);
         }
     }
 
