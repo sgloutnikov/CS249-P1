@@ -57,6 +57,7 @@ public class ClientApplication {
                     System.out.println("Opening " + fileName);
                     serverService.openFile(fileName);
 
+
                     break;
                 }
                 case "rm": {
