@@ -38,4 +38,36 @@ public class Client implements ClientCallback {
     public String getClientId() {
         return clientId;
     }
-}
+
+    public HashMap<String,File> getFileMap() {
+        return this.fileMap;
+    }
+
+    /** additional functions
+     *
+     *
+     */
+    public void listFiles() {
+
+    }
+
+    public void readFiles() {
+
+        // if this file resides locally in the Client cache
+        if (client1.getFileMap().containsKey(fileName)) {
+            System.out.print("Contents of "+fileName+"is as follows:\n");
+            System.out.println()
+            return client1.getFileMap().get(fileName);
+
+        }
+        // else this client will access server for its contents and then cache contents locally
+        else {
+            FileSystem fileSystem=FileSystem.getInstance();
+            //
+            if (fileSystem.fileMap.contaisKey(fileName)) {
+                String temp= fileSystem.fileMap.get(fileName);
+                client1.fileMap.put(fileName, temp);
+                return temp;
+            }
+        }
+    }

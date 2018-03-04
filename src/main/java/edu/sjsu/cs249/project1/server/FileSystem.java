@@ -9,6 +9,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * 2. Delete <br/>
  * 3. Read <br/>
  * 4. Modify
+ * 5. Rename
+ * 6. List   //YX
  *
  * @author David Fisher
  */
@@ -176,52 +178,132 @@ public class FileSystem {
     }
 
     /**
+
      * Renames the file with the given name from the file system and a new name. <br/>
+
      * Note: This method is synchronized at method level because we want to pipe all renames into a sequential order.
+
      * This is important because for each file, we need to check if the name already exists or not. Imagine the scenario
+
      * where two clients try to rename same file at the same time - this synchronization approachwill properly handle
+
      * it by performing the renames one at a time.
+
      *
+
      * Note: This method synchronizes fileMap at object level. This is because we need to lock access to the file system
+
      * during the rename process. This approach properly handles the below scenarios when they occur on the same file:
+
      * <br/>
+
      * 1. Two or more rename operations happening concurrently. First operation will succeed, subsequent operations will
+
      * fail. <br/>
+
      * 2. A create operation and a delete operation happening concurrently (in either order). <br/>
+
      * 3. A read/modify operation and a delete operation happening concurrently (in either order).
+
      *
-     * @param fileName
-     *            The name of the file to rename.
-     * @param newName
-     *            The new name of the file.
-     * @throws FileException
-     *             If the provided name is null, if a file with the provided name does not exist, or if the file was
-     *             already deleted before the new delete operation could be performed.
+
+     *
+     @param fileName
+
+      * The name of the file to rename.
+
+     *
+     @param newName
+
+      * The new name of the file.
+
+     *
+     @throws FileException
+
+      * If the provided name is null, if a file with the provided name does not exist, or if the file was
+
+      * already deleted before the new delete operation could be performed.
+
      */
+
     public synchronized void renameFile(final String fileName, final String newName) throws FileException {
-        if ((fileName != null) && (newName != null)) {
+
+        if ((fileName
+                != null)
+                && (newName !=
+                null)) {
+
             synchronized (this.fileMap) {
+
                 /**
+
                  * First, remove the file from the "directory" (fileMap).
+
                  */
-                if (!this.fileMap.containsKey(newName)) {
-                    final File file = this.fileMap.remove(fileName);
-                    if (file != null) {
+
+                if (!this.fileMap.containsKey(newName))
+                {
+
+                    final
+                    File file =
+                            this.fileMap.remove(fileName);
+
+                    if (file
+                            != null) {
+
                         this.fileMap.put(newName, file);
 
+
                         /**
+
                          * Since the file has been renamed, notify the clients to invalidate their cached files.
+
                          */
+
                         ClientCacheManager.getInstance().sendCacheInvalidationEventToAllClients(fileName);
+
                     } else {
-                        throw new FileException("No file with name " + fileName + " exists and therefore cannot be renamed.");
+
+                        throw
+                                new FileException("No file with name"
+                                        + fileName +
+                                        " exists and therefore cannot be renamed.");
+
                     }
+
                 } else {
-                    throw new FileException("File with name " + newName + " already exists.");
+
+                    throw
+                            new FileException("File with name"
+                                    + newName +
+                                    " already exists.");
+
                 }
+
             }
+
         } else {
-            throw new FileException("Both a file name and a new file name are required to rename a file.");
+
+            throw
+                    new FileException("Both a file name and a new file name are required to rename a file.");
+
+        }
+
+    }
+
+    //Yaoyan
+    public Map<String, File> getFileMap() {
+        return this.fileMap;
+    }
+
+    public void listFiles() throws FileException {
+        if (this.fileMap== null) {
+            System.out.println("Server hosts no files and can't list any. ");
+        }
+        else {
+            for (String filename: FileSystem.getInstance().getFileMap().keySet()) {
+                System.out.println(filename +"\n");
+            }
         }
     }
 }
