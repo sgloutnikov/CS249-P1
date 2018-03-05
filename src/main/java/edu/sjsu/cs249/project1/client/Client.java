@@ -3,6 +3,7 @@ package edu.sjsu.cs249.project1.client;
 import edu.sjsu.cs249.project1.remote.ClientCallback;
 
 import java.util.HashMap;
+import java.util.Set;
 
 public class Client implements ClientCallback {
 
@@ -52,7 +53,16 @@ public class Client implements ClientCallback {
      *
      *
      */
-    public void listFiles() {
+    public void listFiles(Set<String> set) {
+        String result = "";
+        if (set != null) {
+            for (String s : set) {
+                result = result + s + "\n";
+            }
+            System.out.println(result);
+        }
+        else
+            System.out.println("There are no files on server to list. ");
 
     }
 
@@ -80,5 +90,32 @@ public class Client implements ClientCallback {
 
 
       }
+
+     public void removeFiles(String fileName){
+
+            System.out.println(" Your deletion request has been completed. ");
+            // remove the delete file from Client cache if it exists;
+            if (this.fileMap.containsKey(fileName)){
+                File cachedFile = this.fileMap.get(fileName);
+                this.fileMap.remove(fileName, cachedFile);
+
+            }
+
+
+
+     }
+
+     public void createFiles(String fileName, byte[] data){
+
+         System.out.println("Your request to create " + fileName + " is completed. ");
+
+         this.fileMap.put(fileName, new File(data, true));
+     }
+
+     public void modifyFiles(String fileName, byte[] newData){
+         System.out.println("Your request to modify " + fileName + "is completed. ");
+         this.fileMap.put(fileName, new File(newData, true));
+     }
+
     }
 

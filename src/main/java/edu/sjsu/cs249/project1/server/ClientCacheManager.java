@@ -1,5 +1,8 @@
 package edu.sjsu.cs249.project1.server;
 
+import edu.sjsu.cs249.project1.remote.ClientCallback;
+
+import java.rmi.RemoteException;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -125,6 +128,12 @@ public class ClientCacheManager {
         } else {
             throw new CacheException("ID is required to unregister a client.");
         }
+    }
+
+
+    public Client getClient(String clientId){
+
+        return registeredClientsMap.get(clientId);
     }
 
 }
