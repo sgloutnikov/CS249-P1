@@ -32,6 +32,7 @@ public class ClientApplication {
                 "open <filename> - Open a file. The file can be modified. Press return to save and exit\n" +
                 "modify <filename> <new data> - edit a file with new contents and update local cache \n " +
                 "rm <filename> - Delete a file\n" +
+                "rename <filename> - Rename a file\n" +
                 "help - displays this message\n" +
                 "exit - Exits the client\n";
 
