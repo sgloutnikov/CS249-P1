@@ -39,7 +39,7 @@ public class ClientApplication {
             System.out.print("client:~$ ");
             input = scanner.nextLine();
 
-            switch (input.toLowerCase().split(" ")[0]) {
+            switch (input.split(" ")[0].toLowerCase()) {
                 case "help": {
                     System.out.println(help);
                     break;
