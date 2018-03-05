@@ -25,7 +25,7 @@ public class ClientApplication {
         serverService.register(client1);
         System.out.println("+ Client Started +");
 
-        String command = "help";
+        String command = "";
         String help = "Please enter a command. Available commands:\n" +
                 "ls - Lists the available files\n" +
                 "create <filename> <contents>- create a file with the given name \n"+
@@ -49,7 +49,6 @@ public class ClientApplication {
                 }
 
                 case "ls": {
-
                     System.out.println("List files on the server");
                     Set<String> temp = serverService.listFiles(client1);
                     client1.listFiles(temp);
