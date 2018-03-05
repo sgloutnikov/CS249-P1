@@ -25,7 +25,7 @@ public class ClientApplication {
         serverService.register(client1);
         System.out.println("+ Client Started +");
 
-        String command = "";
+
         String help = "Please enter a command. Available commands:\n" +
                 "ls - Lists the available files\n" +
                 "create <filename> <contents>- create a file with the given name \n"+
@@ -36,11 +36,12 @@ public class ClientApplication {
                 "help - displays this message\n" +
                 "exit - Exits the client\n";
 
-        while (!command.equalsIgnoreCase("exit")) {
+        boolean keepGoing = true;
+        while (keepGoing) {
             System.out.print("client:~$ ");
             String input = scanner.nextLine();
             String[] inputs = input.split(" ");
-            command = inputs[0].toLowerCase();
+            String command = inputs[0].toLowerCase();
             
             switch (command) {
                 case "help": {
@@ -152,15 +153,16 @@ public class ClientApplication {
                     break;
                 }
 
+                case "": {
+                    System.out.println("Enter an input.");
+                    break;
+                }
+
                 //  exit system
 
                 case "exit": {
                     serverService.unregister(client1);
-                    break;
-                }
-
-                case "": {
-                    System.out.println("Enter an input.");
+                    keepGoing = false;
                     break;
                 }
 
