@@ -25,7 +25,7 @@ public class ClientApplication {
         serverService.register(client1);
         System.out.println("+ Client Started +");
 
-        String command = "";
+
         String help = "Please enter a command. Available commands:\n" +
                 "ls - Lists the available files\n" +
                 "create <filename> <contents>- create a file with the given name \n"+
@@ -36,11 +36,12 @@ public class ClientApplication {
                 "help - displays this message\n" +
                 "exit - Exits the client\n";
 
-        while (!command.equalsIgnoreCase("exit")) {
+        boolean keepGoing = true;
+        while (keepGoing) {
             System.out.print("client:~$ ");
             String input = scanner.nextLine();
             String[] inputs = input.split(" ");
-            command = inputs[0].toLowerCase();
+            String command = inputs[0].toLowerCase();
 
             switch (command) {
                 case "help": {
@@ -58,6 +59,10 @@ public class ClientApplication {
                 //  through server.
                 case "open": {
                     byte[] temp = null;
+                    if (inputs.length < 2) {
+                        System.out.println("Error. No file name given.");
+                        break;
+                    }
                     String fileName = inputs[1];
                     System.out.println("Opening: " + fileName);
                     File file = client1.getCachedFile(fileName);
@@ -72,7 +77,6 @@ public class ClientApplication {
                             client1.readFiles(temp);
                         }
                     }
-
                     break;
                 }
 
@@ -80,6 +84,10 @@ public class ClientApplication {
                 // cache will be removed as well.
 
                 case "rm": {
+                    if (inputs.length < 2) {
+                        System.out.println("Error. No file name given.");
+                        break;
+                    }
                     String fileName = inputs[1];
                     System.out.println("Deleting: " + fileName);
                     serverService.removeFiles(client1, fileName);
@@ -90,7 +98,15 @@ public class ClientApplication {
                 // create a file on the server and add to local cache.
 
                 case "create": {
+                    if (inputs.length < 2) {
+                        System.out.println("Error. No file name given.");
+                        break;
+                    }
                     String fileName = inputs[1];
+                    if (inputs.length < 3) {
+                        System.out.println("Error. No data given.");
+                        break;
+                    }
                     String data = input.substring(input.indexOf(inputs[2]));
                     byte[] contents = data.getBytes(Charset.forName("UTF-8"));
                     System.out.println("Creating: " + fileName);
@@ -101,7 +117,15 @@ public class ClientApplication {
 
                 // Replace the byte array and update local cache as well.
                 case "modify": {
+                    if (inputs.length < 2) {
+                        System.out.println("Error. No file name given.");
+                        break;
+                    }
                     String fileName = inputs[1];
+                    if (inputs.length < 3) {
+                        System.out.println("Error. No data given.");
+                        break;
+                    }
                     String data = input.substring(input.indexOf(inputs[2]));
                     byte[] newContents = data.getBytes(Charset.forName("UTF-8"));
                     System.out.println("Modifying: " + fileName);
@@ -112,7 +136,15 @@ public class ClientApplication {
 
                 // Replace the file name with a new file name
                 case "rename": {
+                    if (inputs.length < 2) {
+                        System.out.println("Error. No file name given.");
+                        break;
+                    }
                     String fileName = inputs[1];
+                    if (inputs.length < 3) {
+                        System.out.println("Error. No new file name given.");
+                        break;
+                    }
                     String newName = inputs[2];
                     System.out.println("Renaming: " + fileName + " to: " + newName);
                     serverService.renameFile(client1, fileName, newName);
@@ -120,15 +152,21 @@ public class ClientApplication {
                     break;
                 }
 
+                case "": {
+                    System.out.println("Enter an input.");
+                    break;
+                }
+
                 //  exit system
 
                 case "exit": {
                     serverService.unregister(client1);
+                    keepGoing = false;
                     break;
                 }
 
                 default:
-                    System.out.println("Invalid command. Enter 'help' for help.");
+                    System.out.println("Invalid command: [" + command + "]  Enter 'help' for help.");
             }
         }
 
