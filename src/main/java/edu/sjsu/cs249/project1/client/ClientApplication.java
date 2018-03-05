@@ -96,7 +96,7 @@ public class ClientApplication {
                 case "create": {
                     String fileName = input.split(" ")[1];
                     byte[] contents = input.split(" ")[2].getBytes(Charset.forName("UTF-8"));
-                    System.out.println("Creating " + fileName);
+                    System.out.println("Creating: " + fileName);
                     serverService.createFiles(client1, fileName, contents);
                     client1.createFiles(fileName, contents);
                     break;
@@ -106,9 +106,19 @@ public class ClientApplication {
                 case "modify": {
                     String fileName = input.split(" ")[1];
                     byte[] newContents = input.split(" ")[2].getBytes(Charset.forName("UTF-8"));
-                    System.out.println("Modifying " + fileName);
+                    System.out.println("Modifying: " + fileName);
                     serverService.editFiles(client1, fileName, newContents);
                     client1.modifyFiles(fileName, newContents);
+                    break;
+                }
+
+                // Replace the file name with a new file name
+                case "rename": {
+                    String fileName = input.split(" ")[1];
+                    String newName = input.split(" ")[2];
+                    System.out.println("Renaming: " + fileName + " to: " + newName);
+                    serverService.renameFile(client1, fileName, newName);
+                    client1.renameFiles(fileName, newName);
                     break;
                 }
 

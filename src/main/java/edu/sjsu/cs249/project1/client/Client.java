@@ -107,9 +107,8 @@ public class Client implements ClientCallback {
      * @param fileName the name of file to be deleted
      */
     public void removeFiles(String fileName){
-
-            System.out.println(" Your deletion request has been completed. ");
-            // remove the delete file from Client cache if it exists;
+        System.out.println("Your request to delete: " + fileName + " is completed. ");
+        // remove the delete file from Client cache if it exists;
             if (this.fileMap.containsKey(fileName)){
                 File cachedFile = this.fileMap.get(fileName);
                 this.fileMap.remove(fileName, cachedFile);
@@ -125,14 +124,19 @@ public class Client implements ClientCallback {
      */
      public void createFiles(String fileName, byte[] data){
 
-         System.out.println("Your request to create " + fileName + " is completed. ");
+         System.out.println("Your request to create: " + fileName + " is completed. ");
          this.fileMap.put(fileName, new File(data, true));
      }
 
      public void modifyFiles(String fileName, byte[] newData){
-         System.out.println("Your request to modify " + fileName + "is completed. ");
+         System.out.println("Your request to modify " + fileName + " is completed. ");
          this.fileMap.put(fileName, new File(newData, true));
      }
 
+    public void renameFiles(String fileName, String newName){
+        System.out.println("Your request to rename: " + fileName + " to: " + newName + " is completed. ");
+        File file = this.fileMap.remove(fileName);
+        this.fileMap.put(newName, new File(file.getData(), true));
     }
+}
 
