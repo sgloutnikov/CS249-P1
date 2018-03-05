@@ -119,22 +119,22 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
         FileSystem fileSystem=FileSystem.getInstance();
 
         try {
-            temp=fileSystem.readFile(fileName);
+            temp = fileSystem.readFile(fileName);
         } catch (FileException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
-        String clientId = client.getId();//
 
-        Client c = new Client(clientId, client);
-
-        // TODO: method to get Client from clientID inside ClientCacheManager
-        try {
-            ClientCacheManager.getInstance().registerCachedFile(c, fileName);
-        } catch (CacheException e) {
-            e.printStackTrace();
+        if (temp != null) {
+            String clientId = client.getId();
+            Client serverClient = ClientCacheManager.getInstance().getClient(clientId);
+            try {
+                ClientCacheManager.getInstance().registerCachedFile(serverClient, fileName);
+            } catch (CacheException e) {
+                e.printStackTrace();
+            }
         }
+
         return temp;
-
     }
 
     /** Delete a file:

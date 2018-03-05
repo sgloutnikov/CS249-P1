@@ -52,7 +52,7 @@ public class Client implements ClientCallback {
      */
     public void listFiles(Set<String> set) {
         String result = "";
-        if (set != null) {
+        if (set.size() > 0) {
             for (String s : set) {
                 result = result + s + "\n";
             }
@@ -69,12 +69,9 @@ public class Client implements ClientCallback {
      * @param data byte array return from RMI of readFiles() method
      */
     public void readFiles(byte[] data) {
+        System.out.println(new String(data));
 
-        File file = new File(data, true);
-        System.out.println(new String(file.getData()));
-        //fileMap.put(fileName, file);
-
-        }
+    }
         // else this client will access server for its contents and then cache contents locally
 
     /**
