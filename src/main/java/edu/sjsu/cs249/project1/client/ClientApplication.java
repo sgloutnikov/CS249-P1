@@ -120,7 +120,7 @@ public class ClientApplication {
                 }
 
                 default:
-                    System.out.println(help);
+                    System.out.println("Invalid command. Enter 'help' for help.");
             }
         }
 
