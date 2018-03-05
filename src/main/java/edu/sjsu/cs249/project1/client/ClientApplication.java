@@ -2,6 +2,7 @@ package edu.sjsu.cs249.project1.client;
 
 import edu.sjsu.cs249.project1.remote.FileServerService;
 
+
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -39,15 +40,24 @@ public class ClientApplication {
                     System.out.println(help);
                     break;
                 }
+
+                // this will list all the files on the server associated with current client
+
+
                 case "ls": {
                     //TODO: Implement
                     System.out.println("List files");
+                    serverService.listFiles(client1);
                     break;
                 }
+
+                // this will deliver contents of specified filename
                 case "open": {
-                    //TODO Implement
                     String fileName = input.split(" ")[1];
                     System.out.println("Opening " + fileName);
+                    serverService.openFile(fileName);
+
+
                     break;
                 }
                 case "rm": {
