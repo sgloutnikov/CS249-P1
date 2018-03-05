@@ -101,7 +101,7 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
         } catch (FileException e) {
             e.printStackTrace();
         }
-        String clientId = client.getId();
+        String clientId = client.getId();//
 
         Client c = new Client(clientId, client);
 
