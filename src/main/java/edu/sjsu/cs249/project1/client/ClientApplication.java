@@ -63,13 +63,13 @@ public class ClientApplication {
                     byte[] temp = null;
                     String fileName = input.split(" ")[1];
                     System.out.println("Opening " + fileName);
-                    File file=client1.getCachedFile(fileName);
-                    if(file!=null){
-                        temp=file.getData();
+                    File file = client1.getCachedFile(fileName);
+                    if(file != null){
+                        temp = file.getData();
                         client1.readFiles(temp);
                     } else {
                         temp = serverService.openFiles(client1, fileName);
-                        if (temp==null){
+                        if (temp == null) {
                             System.out.println("There is no such file on the server!");
                         } else {
                             client1.readFiles(temp);
