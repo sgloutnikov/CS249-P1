@@ -1,6 +1,7 @@
 package edu.sjsu.cs249.project1.server;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -296,14 +297,18 @@ public class FileSystem {
         return this.fileMap;
     }
 
-    public void listFiles() throws FileException {
+    public Set<String> listFiles() throws FileException {
+        Set result= null;
         if (this.fileMap== null) {
             System.out.println("Server hosts no files and can't list any. ");
         }
-        else {
-            for (String filename: FileSystem.getInstance().getFileMap().keySet()) {
-                System.out.println(filename +"\n");
-            }
+
+            //for (String filename: FileSystem.getInstance().getFileMap().keySet()) {
+                //System.out.println(filename +"\n");
+        else{
+            result = FileSystem.getInstance().getFileMap().keySet();
         }
+
+     return result;
     }
 }

@@ -13,6 +13,11 @@ public class Client implements ClientCallback {
     public Client(String clientId) {
         this.clientId = clientId;
         fileMap = new HashMap<>();
+        /**
+        byte[] t = "hello".getBytes();
+        File f = new File(t, true);
+        fileMap.put("x", f);
+         */
     }
 
     @Override
@@ -51,23 +56,29 @@ public class Client implements ClientCallback {
 
     }
 
-    public void readFiles() {
+    public void readFiles(byte[] data) {
 
-        // if this file resides locally in the Client cache
-        if (client1.getFileMap().containsKey(fileName)) {
-            System.out.print("Contents of "+fileName+"is as follows:\n");
-            System.out.println()
-            return client1.getFileMap().get(fileName);
+        File file=new File(data, true);
+        System.out.println(new String(file.getData()));
+        //fileMap.put(fileName, file);
 
         }
         // else this client will access server for its contents and then cache contents locally
-        else {
-            FileSystem fileSystem=FileSystem.getInstance();
-            //
-            if (fileSystem.fileMap.contaisKey(fileName)) {
-                String temp= fileSystem.fileMap.get(fileName);
-                client1.fileMap.put(fileName, temp);
-                return temp;
+
+    //Yaoyan
+    public File getCachedFile(String fileName){
+        if ( this.fileMap.containsKey(fileName)) {
+
+            if (this.fileMap.get(fileName).getValidStatus()){
+                return this.fileMap.get(fileName);
             }
+            else
+                return null;
         }
+        else
+            return null;
+
+
+      }
     }
+

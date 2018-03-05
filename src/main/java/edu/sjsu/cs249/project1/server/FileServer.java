@@ -2,7 +2,7 @@ package edu.sjsu.cs249.project1.server;
 
 import edu.sjsu.cs249.project1.remote.ClientCallback;
 import edu.sjsu.cs249.project1.remote.FileServerService;
-import edu.sjsu.cs249.project1.server.File;
+import java.util.Set;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -47,13 +47,15 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
     }
 
     @Override
-    public void listFiles(ClientCallback client) throws RemoteException{
+    public Set<String> listFiles(ClientCallback client) throws RemoteException{
+        Set result=null;
         FileSystem fileSystem=FileSystem.getInstance();
         try {
-            fileSystem.listFiles();
+            result = fileSystem.listFiles();
         } catch (FileException e) {
             e.printStackTrace();
         }
+     return result;
     }
 
     /**
@@ -100,7 +102,10 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
             e.printStackTrace();
         }
         String clientId = client.getId();
+
         Client c = new Client(clientId, client);
+
+        // TODO: method to get Client from clientID inside ClientCacheManager
         try {
             ClientCacheManager.getInstance().registerCachedFile(c, fileName);
         } catch (CacheException e) {

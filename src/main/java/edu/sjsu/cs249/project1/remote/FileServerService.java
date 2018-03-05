@@ -2,6 +2,7 @@ package edu.sjsu.cs249.project1.remote;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.Set;
 
 /**
  * RMI Server Interface
@@ -14,7 +15,7 @@ public interface FileServerService extends Remote {
     void hello(String msg) throws RemoteException;
     String version() throws RemoteException;
     // Yaoyan - create, list, read, edit, delete files by a client
-    void listFiles(ClientCallback client) throws RemoteException;
+    Set<String> listFiles(ClientCallback client) throws RemoteException;
     void createFiles(ClientCallback client, String fileName, byte[] data) throws RemoteException;
     byte[] openFiles(ClientCallback client, String fileName) throws RemoteException;
     void removeFiles(ClientCallback client, String fileName) throws RemoteException;

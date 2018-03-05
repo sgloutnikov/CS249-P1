@@ -48,15 +48,28 @@ public class ClientApplication {
                     //TODO: Implement
                     System.out.println("List files");
                     serverService.listFiles(client1);
+
                     break;
                 }
 
                 // this will deliver contents of specified filename
                 case "open": {
+                    byte[] temp = null;
                     String fileName = input.split(" ")[1];
                     System.out.println("Opening " + fileName);
-                    serverService.openFile(fileName);
-
+                    File file=client1.getCachedFile(fileName);
+                    if(file!=null){
+                        temp=file.getData();
+                        client1.readFiles(temp);
+                    }
+                    else {
+                        temp = serverService.openFiles(client1, fileName);
+                        if (temp==null){
+                            System.out.println("There is no such file on the server!");
+                        }
+                        else
+                            client1.readFiles(temp);
+                    }
 
                     break;
                 }
