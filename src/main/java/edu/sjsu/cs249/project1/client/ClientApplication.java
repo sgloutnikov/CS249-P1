@@ -67,14 +67,13 @@ public class ClientApplication {
                     if(file!=null){
                         temp=file.getData();
                         client1.readFiles(temp);
-                    }
-                    else {
+                    } else {
                         temp = serverService.openFiles(client1, fileName);
                         if (temp==null){
                             System.out.println("There is no such file on the server!");
-                        }
-                        else
+                        } else {
                             client1.readFiles(temp);
+                        }
                     }
 
                     break;
@@ -84,11 +83,10 @@ public class ClientApplication {
                 // cache will be removed as well.
 
                 case "rm": {
-
                     String fileName = input.split(" ")[1];
                     System.out.println("Deleting " + fileName);
                     serverService.removeFiles(client1, fileName);
-                    client1.removeFiles(fileName);
+                    client1.removeFile(fileName);
                     break;
                 }
 
@@ -99,7 +97,7 @@ public class ClientApplication {
                     byte[] contents = input.split(" ")[2].getBytes(Charset.forName("UTF-8"));
                     System.out.println("Creating: " + fileName);
                     serverService.createFiles(client1, fileName, contents);
-                    client1.createFiles(fileName, contents);
+                    client1.createFile(fileName, contents);
                     break;
                 }
 
@@ -109,7 +107,7 @@ public class ClientApplication {
                     byte[] newContents = input.split(" ")[2].getBytes(Charset.forName("UTF-8"));
                     System.out.println("Modifying: " + fileName);
                     serverService.editFiles(client1, fileName, newContents);
-                    client1.modifyFiles(fileName, newContents);
+                    client1.modifyFile(fileName, newContents);
                     break;
                 }
 
@@ -119,7 +117,7 @@ public class ClientApplication {
                     String newName = input.split(" ")[2];
                     System.out.println("Renaming: " + fileName + " to: " + newName);
                     serverService.renameFile(client1, fileName, newName);
-                    client1.renameFiles(fileName, newName);
+                    client1.renameFile(fileName, newName);
                     break;
                 }
 

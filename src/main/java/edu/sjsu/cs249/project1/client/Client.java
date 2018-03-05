@@ -57,10 +57,9 @@ public class Client implements ClientCallback {
                 result = result + s + "\n";
             }
             System.out.println(result);
-        }
-        else
+        } else {
             System.out.println("There are no files on server to list. ");
-
+        }
     }
 
     /**
@@ -91,13 +90,12 @@ public class Client implements ClientCallback {
             if (this.fileMap.get(fileName).getValidStatus()){
                 return this.fileMap.get(fileName);
             }
-            else
+            else {
                 return null;
-        }
-        else
+            }
+        } else {
             return null;
-
-
+        }
       }
 
     /**
@@ -106,12 +104,11 @@ public class Client implements ClientCallback {
      *
      * @param fileName the name of file to be deleted
      */
-    public void removeFiles(String fileName){
+    public void removeFile(String fileName){
         System.out.println("Your request to delete: " + fileName + " is completed. ");
         // remove the delete file from Client cache if it exists;
             if (this.fileMap.containsKey(fileName)){
-                File cachedFile = this.fileMap.get(fileName);
-                this.fileMap.remove(fileName, cachedFile);
+                this.fileMap.remove(fileName);
             }
      }
 
@@ -122,22 +119,21 @@ public class Client implements ClientCallback {
      * @param fileName  new file's name
      * @param data      new file's contents in byte array format
      */
-     public void createFiles(String fileName, byte[] data){
-
+     public void createFile(String fileName, byte[] data){
          System.out.println("Your request to create: " + fileName + " is completed. ");
          this.fileMap.put(fileName, new File(data, true));
      }
 
-     public void modifyFiles(String fileName, byte[] newData){
+     public void modifyFile(String fileName, byte[] newData){
          System.out.println("Your request to modify " + fileName + " is completed. ");
          this.fileMap.put(fileName, new File(newData, true));
      }
 
-    public void renameFiles(String fileName, String newName){
+    public void renameFile(String fileName, String newName){
         System.out.println("Your request to rename: " + fileName + " to: " + newName + " is completed. ");
         if (this.fileMap.containsKey(fileName)){
-            File cachedFile = this.fileMap.remove(fileName);
-            this.fileMap.put(newName, cachedFile);
+            File file = this.fileMap.remove(fileName);
+            this.fileMap.put(newName, file);
         }
     }
 }
