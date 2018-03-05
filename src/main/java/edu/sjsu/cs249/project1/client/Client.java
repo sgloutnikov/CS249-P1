@@ -135,8 +135,10 @@ public class Client implements ClientCallback {
 
     public void renameFiles(String fileName, String newName){
         System.out.println("Your request to rename: " + fileName + " to: " + newName + " is completed. ");
-        File file = this.fileMap.remove(fileName);
-        this.fileMap.put(newName, file);
+        if (this.fileMap.containsKey(fileName)){
+            File cachedFile = this.fileMap.get(fileName);
+            this.fileMap.put(newName, cachedFile);
+        }
     }
 }
 
