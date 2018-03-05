@@ -48,13 +48,11 @@ public class ClientApplication {
                     break;
                 }
 
-                // this will list all the files on the server
-
                 case "ls": {
+
                     System.out.println("List files on the server");
                     Set<String> temp = serverService.listFiles(client1);
                     client1.listFiles(temp);
-
                     break;
                 }
 

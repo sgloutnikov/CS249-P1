@@ -184,19 +184,8 @@ public class FileSystem {
      *
      *
      */
-    public Set<String> listFiles() throws FileException {
-        Set result= null;
-        if (this.fileMap== null) {
-            System.out.println("Server hosts no files and can't list any. ");
-        }
-
-        //for (String filename: FileSystem.getInstance().getFileMap().keySet()) {
-        //System.out.println(filename +"\n");
-        else{
-            result = FileSystem.getInstance().getFileMap().keySet();
-        }
-
-        return result;
+    public Set<String> listFiles() {
+        return fileMap.keySet();
     }
 
     public Map<String, File> getFileMap() {
