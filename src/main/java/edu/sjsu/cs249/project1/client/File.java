@@ -27,7 +27,6 @@ public class File {
         isValid = valid;
     }
 
-    // Yaoyan
     public boolean getValidStatus(){
         return this.isValid;
     }

@@ -28,10 +28,10 @@ public class ClientApplication {
         String input = "";
         String help = "Please enter a command. Available commands:\n" +
                 "ls - Lists the available files\n" +
-                "open <filename> - Open a file. The file can be modified. Press return to save and exit\n" +
-                "rm <filename> - Delete a file\n" +
                 "create <filename> <contents>- create a file with the given name \n"+
+                "open <filename> - Open a file. The file can be modified. Press return to save and exit\n" +
                 "modify <filename> <new data> - edit a file with new contents and update local cache \n " +
+                "rm <filename> - Delete a file\n" +
                 "help - displays this message\n" +
                 "exit - Exits the client\n";
 
@@ -45,8 +45,7 @@ public class ClientApplication {
                     break;
                 }
 
-                // this will list all the files on the server associated with current client
-
+                // this will list all the files on the server
 
                 case "ls": {
 
@@ -80,7 +79,8 @@ public class ClientApplication {
                     break;
                 }
 
-                // delete a file on the server. Besides ClientCallback client's sendCacheInvalidationEvent()
+                // delete a file on the server. Besides ClientCallback client's sendCacheInvalidationEvent(), local
+                // cache will be removed as well.
 
                 case "rm": {
 
@@ -91,7 +91,7 @@ public class ClientApplication {
                     break;
                 }
 
-                // create a file on the server.
+                // create a file on the server and add to local cache.
 
                 case "create": {
                     String fileName = input.split(" ")[1];
@@ -102,6 +102,7 @@ public class ClientApplication {
 
                 }
 
+                // Replace the byte array and update local cache as well.
                 case "modify": {
                     String fileName = input.split(" ")[1];
                     byte[] newContents = input.split(" ")[2].getBytes(Charset.forName("UTF-8"));
@@ -110,6 +111,8 @@ public class ClientApplication {
                     client1.modifyFiles(fileName, newContents);
 
                 }
+
+                //  exit system
 
                 case "exit": {
                     serverService.unregister(client1);

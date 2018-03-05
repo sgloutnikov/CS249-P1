@@ -132,7 +132,6 @@ public class ClientCacheManager {
 
 
     public Client getClient(String clientId){
-
         return registeredClientsMap.get(clientId);
     }
 

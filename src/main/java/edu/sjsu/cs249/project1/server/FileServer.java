@@ -47,6 +47,11 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
     }
 
     @Override
+    /**
+     *  List all the files on the server.
+     *
+     *
+     */
     public Set<String> listFiles(ClientCallback client) throws RemoteException{
         Set result=null;
         FileSystem fileSystem=FileSystem.getInstance();
@@ -82,8 +87,6 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
         } catch (CacheException e) {
             e.printStackTrace();
         }
-
-
     }
 
     /**
@@ -120,9 +123,9 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
      *  if existing, remove from Singleton FileSystem and ClientCashManager and
      *  notify all the relevant clients of this deletion.
      *
-     *  @param
      *
-     *  @return
+     *
+     *
      */
     public void removeFiles(ClientCallback client, String fileName) throws RemoteException{
         FileSystem fileSystem=FileSystem.getInstance();

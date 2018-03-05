@@ -10,8 +10,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * 2. Delete <br/>
  * 3. Read <br/>
  * 4. Modify
- * 5. Rename
- * 6. List   //YX
+ * 5. List
+ * 6. Rename
  *
  * @author David Fisher
  */
@@ -179,6 +179,31 @@ public class FileSystem {
     }
 
     /**
+     *
+     *  List all the files on the server and return in Set</fileNames>
+     *
+     *
+     */
+    public Set<String> listFiles() throws FileException {
+        Set result= null;
+        if (this.fileMap== null) {
+            System.out.println("Server hosts no files and can't list any. ");
+        }
+
+        //for (String filename: FileSystem.getInstance().getFileMap().keySet()) {
+        //System.out.println(filename +"\n");
+        else{
+            result = FileSystem.getInstance().getFileMap().keySet();
+        }
+
+        return result;
+    }
+
+    public Map<String, File> getFileMap() {
+        return this.fileMap;
+    }
+
+    /**
 
      * Renames the file with the given name from the file system and a new name. <br/>
 
@@ -292,23 +317,4 @@ public class FileSystem {
 
     }
 
-    //Yaoyan
-    public Map<String, File> getFileMap() {
-        return this.fileMap;
-    }
-
-    public Set<String> listFiles() throws FileException {
-        Set result= null;
-        if (this.fileMap== null) {
-            System.out.println("Server hosts no files and can't list any. ");
-        }
-
-            //for (String filename: FileSystem.getInstance().getFileMap().keySet()) {
-                //System.out.println(filename +"\n");
-        else{
-            result = FileSystem.getInstance().getFileMap().keySet();
-        }
-
-     return result;
-    }
 }

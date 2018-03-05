@@ -14,7 +14,6 @@ public interface FileServerService extends Remote {
     void unregister(ClientCallback client) throws RemoteException;
     void hello(String msg) throws RemoteException;
     String version() throws RemoteException;
-    // Yaoyan - create, list, read, edit, delete files by a client
     Set<String> listFiles(ClientCallback client) throws RemoteException;
     void createFiles(ClientCallback client, String fileName, byte[] data) throws RemoteException;
     byte[] openFiles(ClientCallback client, String fileName) throws RemoteException;
