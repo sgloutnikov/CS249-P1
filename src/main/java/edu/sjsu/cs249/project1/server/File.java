@@ -2,6 +2,7 @@ package edu.sjsu.cs249.project1.server;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -13,7 +14,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  *
  * @author David Fisher
  */
-public class File {
+public class File implements Serializable {
     /**
      * Note: FILE_PATH_PREFIX is relative to your workspace installation directory.
      */
