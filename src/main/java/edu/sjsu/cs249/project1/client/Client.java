@@ -3,6 +3,7 @@ package edu.sjsu.cs249.project1.client;
 import edu.sjsu.cs249.project1.remote.ClientCallback;
 
 import java.util.HashMap;
+import java.util.Set;
 
 public class Client implements ClientCallback {
 
@@ -43,31 +44,95 @@ public class Client implements ClientCallback {
         return this.fileMap;
     }
 
-    /** additional functions
+    /** List all the files residing on the server and assume no authentication is required for any clients
+     *  to operate on the files, or error message when no files are stored on the server.
      *
+     *  @param set set of filenames returned by remote invocation of listFiles(ClientCallback c) method
      *
      */
-    public void listFiles() {
+    public void listFiles(Set<String> set) {
+        String result = "";
+        if (set != null) {
+            for (String s : set) {
+                result = result + s + "\n";
+            }
+            System.out.println(result);
+        }
+        else
+            System.out.println("There are no files on server to list. ");
 
     }
 
-    public void readFiles() {
+    /**
+     *  Read/Open a file with given name: if available at local cache, fetch directly based on its validation status,
+     *  or access server when not locally cached.
+     *
+     * @param data byte array return from RMI of readFiles() method
+     */
+    public void readFiles(byte[] data) {
 
-        // if this file resides locally in the Client cache
-        if (client1.getFileMap().containsKey(fileName)) {
-            System.out.print("Contents of "+fileName+"is as follows:\n");
-            System.out.println()
-            return client1.getFileMap().get(fileName);
+        File file=new File(data, true);
+        System.out.println(new String(file.getData()));
+        //fileMap.put(fileName, file);
 
         }
         // else this client will access server for its contents and then cache contents locally
-        else {
-            FileSystem fileSystem=FileSystem.getInstance();
-            //
-            if (fileSystem.fileMap.contaisKey(fileName)) {
-                String temp= fileSystem.fileMap.get(fileName);
-                client1.fileMap.put(fileName, temp);
-                return temp;
+
+    /**
+     *
+     *  Get cached file with given based on availability on local cache and its validation status.
+     *
+     * @param fileName
+     * @return
+     */
+    public File getCachedFile(String fileName){
+        if ( this.fileMap.containsKey(fileName)) {
+
+            if (this.fileMap.get(fileName).getValidStatus()){
+                return this.fileMap.get(fileName);
             }
+            else
+                return null;
         }
+        else
+            return null;
+
+
+      }
+
+    /**
+     * Delete a file with given name and remove local cache if present.
+     *
+     *
+     * @param fileName the name of file to be deleted
+     */
+    public void removeFiles(String fileName){
+
+            System.out.println(" Your deletion request has been completed. ");
+            // remove the delete file from Client cache if it exists;
+            if (this.fileMap.containsKey(fileName)){
+                File cachedFile = this.fileMap.get(fileName);
+                this.fileMap.remove(fileName, cachedFile);
+            }
+     }
+
+    /**
+     *
+     * Create a file and add to local cache.
+     *
+     * @param fileName  new file's name
+     * @param data      new file's contents in byte array format
+     */
+     public void createFiles(String fileName, byte[] data){
+
+         System.out.println("Your request to create " + fileName + " is completed. ");
+         this.fileMap.put(fileName, new File(data, true));
+     }
+
+     public void modifyFiles(String fileName, byte[] newData){
+         System.out.println("Your request to modify " + fileName + "is completed. ");
+         this.fileMap.put(fileName, new File(newData, true));
+     }
+
     }
+

@@ -2,7 +2,7 @@ package edu.sjsu.cs249.project1.server;
 
 import edu.sjsu.cs249.project1.remote.ClientCallback;
 import edu.sjsu.cs249.project1.remote.FileServerService;
-import edu.sjsu.cs249.project1.server.File;
+import java.util.Set;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -70,13 +70,20 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
     }
 
     @Override
-    public void listFiles(ClientCallback client) throws RemoteException{
+    /**
+     *  List all the files on the server.
+     *
+     *
+     */
+    public Set<String> listFiles(ClientCallback client) throws RemoteException{
+        Set result=null;
         FileSystem fileSystem=FileSystem.getInstance();
         try {
-            fileSystem.listFiles();
+            result = fileSystem.listFiles();
         } catch (FileException e) {
             e.printStackTrace();
         }
+     return result;
     }
 
     /**
@@ -103,8 +110,6 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
         } catch (CacheException e) {
             e.printStackTrace();
         }
-
-
     }
 
     /**
@@ -122,8 +127,11 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
         } catch (FileException e) {
             e.printStackTrace();
         }
-        String clientId = client.getId();
+        String clientId = client.getId();//
+
         Client c = new Client(clientId, client);
+
+        // TODO: method to get Client from clientID inside ClientCacheManager
         try {
             ClientCacheManager.getInstance().registerCachedFile(c, fileName);
         } catch (CacheException e) {
@@ -138,9 +146,9 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
      *  if existing, remove from Singleton FileSystem and ClientCashManager and
      *  notify all the relevant clients of this deletion.
      *
-     *  @param
      *
-     *  @return
+     *
+     *
      */
     public void removeFiles(ClientCallback client, String fileName) throws RemoteException{
         FileSystem fileSystem=FileSystem.getInstance();

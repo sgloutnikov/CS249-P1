@@ -26,4 +26,8 @@ public class File {
     public void setValid(boolean valid) {
         isValid = valid;
     }
+
+    public boolean getValidStatus(){
+        return this.isValid;
+    }
 }
