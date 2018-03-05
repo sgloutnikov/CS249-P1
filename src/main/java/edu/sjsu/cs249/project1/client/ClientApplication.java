@@ -25,7 +25,7 @@ public class ClientApplication {
         serverService.register(client1);
         System.out.println("+ Client Started +");
 
-        String input = "";
+        String command = "";
         String help = "Please enter a command. Available commands:\n" +
                 "ls - Lists the available files\n" +
                 "create <filename> <contents>- create a file with the given name \n"+
@@ -36,11 +36,13 @@ public class ClientApplication {
                 "help - displays this message\n" +
                 "exit - Exits the client\n";
 
-        while (!input.equalsIgnoreCase("exit")) {
+        while (!command.equalsIgnoreCase("exit")) {
             System.out.print("client:~$ ");
-            input = scanner.nextLine();
+            String input = scanner.nextLine();
+            String[] inputs = input.split(" ");
+            command = inputs[0].toLowerCase();
 
-            switch (input.split(" ")[0].toLowerCase()) {
+            switch (command) {
                 case "help": {
                     System.out.println(help);
                     break;
@@ -49,7 +51,6 @@ public class ClientApplication {
                 // this will list all the files on the server
 
                 case "ls": {
-
                     System.out.println("List files on the server");
                     Set<String> temp = serverService.listFiles(client1);
                     client1.listFiles(temp);
@@ -61,8 +62,8 @@ public class ClientApplication {
                 //  through server.
                 case "open": {
                     byte[] temp = null;
-                    String fileName = input.split(" ")[1];
-                    System.out.println("Opening " + fileName);
+                    String fileName = inputs[1];
+                    System.out.println("Opening: " + fileName);
                     File file = client1.getCachedFile(fileName);
                     if(file != null){
                         temp = file.getData();
@@ -83,8 +84,8 @@ public class ClientApplication {
                 // cache will be removed as well.
 
                 case "rm": {
-                    String fileName = input.split(" ")[1];
-                    System.out.println("Deleting " + fileName);
+                    String fileName = inputs[1];
+                    System.out.println("Deleting: " + fileName);
                     serverService.removeFiles(client1, fileName);
                     client1.removeFile(fileName);
                     break;
@@ -93,8 +94,9 @@ public class ClientApplication {
                 // create a file on the server and add to local cache.
 
                 case "create": {
-                    String fileName = input.split(" ")[1];
-                    byte[] contents = input.split(" ")[2].getBytes(Charset.forName("UTF-8"));
+                    String fileName = inputs[1];
+                    String data = input.substring(input.indexOf(inputs[2]));
+                    byte[] contents = data.getBytes(Charset.forName("UTF-8"));
                     System.out.println("Creating: " + fileName);
                     serverService.createFiles(client1, fileName, contents);
                     client1.createFile(fileName, contents);
@@ -103,8 +105,9 @@ public class ClientApplication {
 
                 // Replace the byte array and update local cache as well.
                 case "modify": {
-                    String fileName = input.split(" ")[1];
-                    byte[] newContents = input.split(" ")[2].getBytes(Charset.forName("UTF-8"));
+                    String fileName = inputs[1];
+                    String data = input.substring(input.indexOf(inputs[2]));
+                    byte[] newContents = data.getBytes(Charset.forName("UTF-8"));
                     System.out.println("Modifying: " + fileName);
                     serverService.editFiles(client1, fileName, newContents);
                     client1.modifyFile(fileName, newContents);
@@ -113,8 +116,8 @@ public class ClientApplication {
 
                 // Replace the file name with a new file name
                 case "rename": {
-                    String fileName = input.split(" ")[1];
-                    String newName = input.split(" ")[2];
+                    String fileName = inputs[1];
+                    String newName = inputs[2];
                     System.out.println("Renaming: " + fileName + " to: " + newName);
                     serverService.renameFile(client1, fileName, newName);
                     client1.renameFile(fileName, newName);
