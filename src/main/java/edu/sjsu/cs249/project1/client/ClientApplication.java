@@ -99,7 +99,7 @@ public class ClientApplication {
                     System.out.println("Creating " + fileName);
                     serverService.createFiles(client1, fileName, contents);
                     client1.createFiles(fileName, contents);
-
+                    break;
                 }
 
                 // Replace the byte array and update local cache as well.
@@ -109,7 +109,7 @@ public class ClientApplication {
                     System.out.println("Modifying " + fileName);
                     serverService.editFiles(client1, fileName, newContents);
                     client1.modifyFiles(fileName, newContents);
-
+                    break;
                 }
 
                 //  exit system
