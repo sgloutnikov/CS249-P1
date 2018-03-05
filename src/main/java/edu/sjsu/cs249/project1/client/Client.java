@@ -102,10 +102,7 @@ public class Client implements ClientCallback {
     public void removeFile(String fileName){
         System.out.println("Your request to delete: " + fileName + " is completed.");
         // removes and deletes file from Client cache if it exists;
-        File file = this.fileMap.remove(fileName);
-        if (file == null){
-            System.out.println("File: " + fileName + " not found.");
-        }
+        this.fileMap.remove(fileName);
      }
 
     /**
@@ -117,20 +114,12 @@ public class Client implements ClientCallback {
      */
      public void createFile(String fileName, byte[] data){
          System.out.println("Your request to create: " + fileName + " is completed.");
-         if (!this.fileMap.containsKey(fileName)){
-             this.fileMap.put(fileName, new File(data, true));
-         } else {
-             System.out.println("File: " + fileName + " already exists.");
-         }
+         this.fileMap.put(fileName, new File(data, true));
      }
 
      public void modifyFile(String fileName, byte[] newData){
          System.out.println("Your request to modify " + fileName + " is completed.");
-         if (this.fileMap.containsKey(fileName)){
-             this.fileMap.put(fileName, new File(newData, true));
-         } else {
-             System.out.println("File: " + fileName + " not found.");
-         }
+         this.fileMap.put(fileName, new File(newData, true));
      }
 
     public void renameFile(String fileName, String newName){
@@ -138,8 +127,6 @@ public class Client implements ClientCallback {
         File file = this.fileMap.remove(fileName);
         if (file != null) {
             this.fileMap.put(newName, file);
-        } else {
-            System.out.println("File: " + fileName + " not found.");
         }
     }
 }
