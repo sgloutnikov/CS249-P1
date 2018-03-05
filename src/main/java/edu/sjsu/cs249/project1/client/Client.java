@@ -70,7 +70,7 @@ public class Client implements ClientCallback {
      */
     public void readFiles(byte[] data) {
 
-        File file=new File(data, true);
+        File file = new File(data, true);
         System.out.println(new String(file.getData()));
         //fileMap.put(fileName, file);
 
@@ -88,8 +88,7 @@ public class Client implements ClientCallback {
         if (this.fileMap.containsKey(fileName)) {
             if (this.fileMap.get(fileName).getValidStatus()){
                 return this.fileMap.get(fileName);
-            }
-            else {
+            } else {
                 return null;
             }
         } else {
@@ -105,12 +104,11 @@ public class Client implements ClientCallback {
      */
     public void removeFile(String fileName){
         System.out.println("Your request to delete: " + fileName + " is completed.");
-        // remove and deletes file from Client cache if it exists;
-            if (this.fileMap.containsKey(fileName)){
-                this.fileMap.remove(fileName);
-            } else {
-                System.out.println("File: " + fileName + " not found.");
-            }
+        // removes and deletes file from Client cache if it exists;
+        File file = this.fileMap.remove(fileName);
+        if (file == null){
+            System.out.println("File: " + fileName + " not found.");
+        }
      }
 
     /**
@@ -122,7 +120,11 @@ public class Client implements ClientCallback {
      */
      public void createFile(String fileName, byte[] data){
          System.out.println("Your request to create: " + fileName + " is completed.");
-         this.fileMap.put(fileName, new File(data, true));
+         if (!this.fileMap.containsKey(fileName)){
+             this.fileMap.put(fileName, new File(data, true));
+         } else {
+             System.out.println("File: " + fileName + " already exists.");
+         }
      }
 
      public void modifyFile(String fileName, byte[] newData){
@@ -136,8 +138,8 @@ public class Client implements ClientCallback {
 
     public void renameFile(String fileName, String newName){
         System.out.println("Your request to rename: " + fileName + " to: " + newName + " is completed.");
-        if (this.fileMap.containsKey(fileName)){
-            File file = this.fileMap.remove(fileName);
+        File file = this.fileMap.remove(fileName);
+        if (file != null) {
             this.fileMap.put(newName, file);
         } else {
             System.out.println("File: " + fileName + " not found.");
