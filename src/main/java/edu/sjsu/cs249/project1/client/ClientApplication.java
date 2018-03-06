@@ -12,20 +12,25 @@ import java.util.Scanner;
 import java.util.Set;
 import java.nio.charset.*;
 
+/**
+ * Entry point into the Client application. ClientApplication handles user input and interaction with
+ * the Client and registering/interacting with the FileServer.
+ */
 public class ClientApplication {
 
     public static void main(final String[] args) throws RemoteException, NotBoundException, MalformedURLException {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter a valid client port number: ");
+        System.out.print("Enter a valid/open client port number: ");
         int port = scanner.nextInt();
 
+        // Setup Client and connect to Server via RMI
         Client client1 = new Client("client-" + System.currentTimeMillis()/1000L);
         UnicastRemoteObject.exportObject(client1, port);
         FileServerService serverService = (FileServerService) Naming.lookup("rmi://localhost:5099/fileService");
         serverService.register(client1);
         System.out.println("+ Client Started +");
 
-
+        // Handle user input
         String help = "Available commands:\n" +
                 "ls - Lists the available files\n" +
                 "create <filename> <contents> - create a file with the given name \n"+
@@ -52,7 +57,7 @@ public class ClientApplication {
 
                 // lists out files
                 case "ls": {
-                    Set<String> temp = serverService.listFiles(client1);
+                    Set<String> temp = serverService.listFiles();
                     client1.listFiles(temp);
                     break;
                 }
@@ -84,7 +89,6 @@ public class ClientApplication {
 
                 // delete a file on the server. Besides ClientCallback client's sendCacheInvalidationEvent(), local
                 // cache will be removed as well.
-
                 case "rm": {
                     if (inputs.length < 2) {
                         System.out.println("Error. No file name given.");
@@ -97,7 +101,6 @@ public class ClientApplication {
                 }
 
                 // create a file on the server and add to local cache.
-
                 case "create": {
                     if (inputs.length < 2) {
                         System.out.println("Error. No file name given.");

@@ -1,5 +1,8 @@
 package edu.sjsu.cs249.project1.client;
 
+/**
+ * Represents a File on the Client side.
+ */
 public class File {
 
     private byte[] data;

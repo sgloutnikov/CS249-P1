@@ -11,6 +11,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 /**
+ * The FileServer is the entry point into the Server operations from a Client.
  * Implements the RMI Interface
  */
 public class FileServer extends UnicastRemoteObject implements FileServerService {
@@ -51,6 +52,12 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
         }
     }
 
+    /**
+     * Register a client with the server. The server needs to track all the clients and the files
+     * they have cached.
+     * @param client the client callback
+     * @throws RemoteException
+     */
     @Override
     public void register(ClientCallback client) throws RemoteException {
         String clientId = client.getId();
@@ -62,6 +69,12 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
         }
     }
 
+    /**
+     * Unregister the client from the server when the client exits. Should be called before the client exits
+     * so that the server no longer tracks it.
+     * @param client the client callback in this case used to identify the client
+     * @throws RemoteException
+     */
     @Override
     public void unregister(ClientCallback client) throws RemoteException {
         try {
@@ -73,11 +86,9 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
 
     @Override
     /**
-     *  List all the files on the server.
-     *
-     *
+     *  List all available files on the server.
      */
-    public Set<String> listFiles(ClientCallback client) throws RemoteException{
+    public Set<String> listFiles() throws RemoteException{
         return FileSystem.getInstance().listFiles();
     }
 
@@ -86,9 +97,11 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
      * if already exists, prompt for a different name;
      * if not, create File and Client from server's view and
      * register with Singleton FileSystem and ClientCashManager
-     *
+     * @param client the client creating the file
+     * @param fileName file name of the file
+     * @param data data of the file
+     * @throws RemoteException
      */
-
     public void createFile(ClientCallback client, String fileName, byte[] data) throws RemoteException{
         FileSystem fileSystem = FileSystem.getInstance();
         try {
@@ -108,10 +121,14 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
     }
 
     /**
-     *  Read a file:
+     * Read a file:
      *  if not existing, print error message ;
      *  if existing, search Singleton FileSystem and print file data in byte[] and
      *  register in ClientCacheManager
+     * @param client the client opening the file
+     * @param fileName file name of the file
+     * @return byte array of the data
+     * @throws RemoteException
      */
     public byte[] openFile(ClientCallback client, String fileName) throws RemoteException{
         byte[] temp = null;
@@ -137,14 +154,11 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
         return temp;
     }
 
-    /** Delete a file:
-     *  if not existing, print error message;
-     *  if existing, remove from Singleton FileSystem and ClientCashManager and
-     *  notify all the relevant clients of this deletion.
-     *
-     *
-     *
-     *
+    /**
+     * Delete the specified file. FileSystem will handle notifying clients that have this file
+     * cached that is no longr valid.
+     * @param fileName name of the file being deleted
+     * @throws RemoteException
      */
     public void removeFile(String fileName) throws RemoteException{
         FileSystem fileSystem = FileSystem.getInstance();
@@ -156,9 +170,12 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
 
     }
 
-    /** change file's contents and update all the relevant clients
-     *
-     *
+
+    /**
+     * Change a file's contents. The FileSystem will notify  all the relevant clients.
+     * @param fileName name of the file being modified
+     * @param newData new data for the specified file
+     * @throws RemoteException
      */
     public void editFile(String fileName, byte[] newData) throws RemoteException{
         FileSystem fileSystem=FileSystem.getInstance();
@@ -170,6 +187,12 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
 
     }
 
+    /**
+     * Renames the file to a new name.
+     * @param fileName old file name
+     * @param newFileName new file name
+     * @throws RemoteException
+     */
     public void renameFile(String fileName, String newFileName) throws RemoteException{
         FileSystem fileSystem=FileSystem.getInstance();
         try {
