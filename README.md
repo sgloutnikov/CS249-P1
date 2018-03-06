@@ -19,7 +19,7 @@ To build an executable jar for the Server run: gradlew jarServer
 
 You will find the resulting server jar inside ./build/libs.
 
-#### Client 
+##### Client 
 
 To build an executable jar for the Client run: gradlew jarClient
 
