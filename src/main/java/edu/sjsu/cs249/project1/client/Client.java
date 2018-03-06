@@ -17,13 +17,7 @@ public class Client implements ClientCallback {
     }
 
     @Override
-    public void ping() {
-
-    }
-
-    @Override
     public void invalidateCache(String file) {
-        System.out.println("Received invalidate cache from server for: " + file);
         File cachedFile = fileMap.get(file);
         if (cachedFile != null) {
             cachedFile.setValid(false);
@@ -34,14 +28,6 @@ public class Client implements ClientCallback {
     @Override
     public String getId() {
         return this.clientId;
-    }
-
-    public String getClientId() {
-        return clientId;
-    }
-
-    public HashMap<String,File> getFileMap() {
-        return this.fileMap;
     }
 
     /** List all the files residing on the server and assume no authentication is required for any clients
@@ -72,7 +58,6 @@ public class Client implements ClientCallback {
         System.out.println(new String(data));
 
     }
-        // else this client will access server for its contents and then cache contents locally
 
     /**
      *

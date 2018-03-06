@@ -78,10 +78,7 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
      *
      */
     public Set<String> listFiles(ClientCallback client) throws RemoteException{
-        Set result = null;
-        FileSystem fileSystem = FileSystem.getInstance();
-        result = fileSystem.listFiles();
-        return result;
+        return FileSystem.getInstance().listFiles();
     }
 
     /**
