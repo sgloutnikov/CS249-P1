@@ -82,16 +82,12 @@ public class Client implements ClientCallback {
      * @return
      */
     public File getCachedFile(String fileName){
-        if (this.fileMap.containsKey(fileName)) {
-            if (this.fileMap.get(fileName).getValidStatus()){
-                return this.fileMap.get(fileName);
-            } else {
-                return null;
-            }
+        if (this.fileMap.containsKey(fileName) && this.fileMap.get(fileName).getValidStatus()) {
+            return this.fileMap.get(fileName);
         } else {
             return null;
         }
-      }
+    }
 
     /**
      * Delete a file with given name and remove local cache if present.
