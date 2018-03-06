@@ -3,7 +3,7 @@
  
 ### Requirements
 
-- Java 8
+- Java 8 SDK
 
 ### Building (Gradle)
 
