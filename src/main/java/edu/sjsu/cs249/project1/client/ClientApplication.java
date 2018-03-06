@@ -19,14 +19,32 @@ import java.nio.charset.*;
 public class ClientApplication {
 
     public static void main(final String[] args) throws RemoteException, NotBoundException, MalformedURLException {
+        // Prompt for server host and client port
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter a valid/open client port number: ");
-        int port = scanner.nextInt();
+        String scannerInput;
+        String host;
+        int port;
+        System.out.print("Enter the server location [localhost]: ");
+        scannerInput = scanner.nextLine();
+        if (scannerInput.length() > 1) {
+            host = scannerInput;
+        } else {
+            host = "localhost";
+        }
+        System.out.println("Server host: " + host);
+        System.out.print("Enter a valid/open client port number [2000]: ");
+        scannerInput = scanner.nextLine();
+        if (scannerInput.length() > 1) {
+            port = Integer.parseInt(scannerInput);
+        } else {
+            port = 2000;
+        }
+        System.out.println("Server port: " + port);
 
         // Setup Client and connect to Server via RMI
         Client client1 = new Client("client-" + System.currentTimeMillis()/1000L);
         UnicastRemoteObject.exportObject(client1, port);
-        FileServerService serverService = (FileServerService) Naming.lookup("rmi://localhost:5099/fileService");
+        FileServerService serverService = (FileServerService) Naming.lookup("rmi://" + host + ":5099/fileService");
         serverService.register(client1);
         System.out.println("+ Client Started +");
 
