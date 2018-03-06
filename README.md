@@ -1,13 +1,29 @@
 # CS249-P1
  SJSU CS249 Project 1 - Stateless File Server with Client Side Cache 
+ 
+### Requirements
+
+- Java 8
 
 ### Building (Gradle)
 
-Build executable JAR with:
+We use Gradle for build automation. If gradle is not installed on your system you can use the provided Gradle Wrapper to perform all build commands. **gradlew.bat** for Windows systems and **gradlew** for Linux/MacOS systems. Java 8 must be installed on your system with a proper JAVA_HOME environment variable.
 
-Client: 'gradle/gradlew jarClinet' 
+#### Build an executable JAR from source
 
-Server: 'gradle/gradlew jarServer'
+Clean the project build paths by running 'gradlew clean'
+
+##### Server
+
+To build an executable jar for the Server run: gradlew jarServer
+
+You will find the resulting server jar inside ./build/libs.
+
+#### Client 
+
+To build an executable jar for the Client run: gradlew jarClient
+
+You will find the resulting client jar inside ./build/libs.
 
 
 ### Group members:
