@@ -243,67 +243,35 @@ public class FileSystem {
 
     public synchronized void renameFile(final String fileName, final String newName) throws FileException {
 
-        if ((fileName
-                != null)
-                && (newName !=
-                null)) {
+        if ((fileName != null) && (newName != null)) {
 
-            synchronized (this.fileMap) {
+            /**
+             * First, remove the file from the "directory" (fileMap).
+             */
+            if (!this.fileMap.containsKey(newName)) {
 
-                /**
+                final File file = this.fileMap.remove(fileName);
 
-                 * First, remove the file from the "directory" (fileMap).
+                if (file != null) {
+                    this.fileMap.put(newName, file);
 
-                 */
-
-                if (!this.fileMap.containsKey(newName))
-                {
-
-                    final
-                    File file =
-                            this.fileMap.remove(fileName);
-
-                    if (file
-                            != null) {
-
-                        this.fileMap.put(newName, file);
-
-
-                        /**
-
-                         * Since the file has been renamed, notify the clients to invalidate their cached files.
-
-                         */
-
-                        ClientCacheManager.getInstance().sendCacheInvalidationEventToAllClients(fileName);
-
-                    } else {
-
-                        throw
-                                new FileException("No file with name"
-                                        + fileName +
-                                        " exists and therefore cannot be renamed.");
-
-                    }
+                    /**
+                     * Since the file has been renamed, notify the clients to invalidate their cached files.
+                     */
+                    ClientCacheManager.getInstance().sendCacheInvalidationEventToAllClients(fileName);
 
                 } else {
-
-                    throw
-                            new FileException("File with name"
-                                    + newName +
-                                    " already exists.");
+                    throw new FileException("No file with name" + fileName + " exists and therefore cannot be renamed.");
 
                 }
 
+            } else {
+                throw new FileException("File with name " + newName + " already exists.");
             }
 
         } else {
-
-            throw
-                    new FileException("Both a file name and a new file name are required to rename a file.");
-
+            throw new FileException("Both a file name and a new file name are required to rename a file.");
         }
-
     }
 
 }
