@@ -205,7 +205,6 @@ public class FileSystem {
      * 2. A create operation and a delete operation happening concurrently (in either order). <br/>
      * 3. A read/modify operation and a delete operation happening concurrently (in either order).
      *
-     *
      @param fileName
       * The name of the file to rename.
       *
@@ -217,31 +216,36 @@ public class FileSystem {
       * already deleted before the new delete operation could be performed.
      */
     public synchronized void renameFile(final String fileName, final String newName) throws FileException {
-        if ((fileName != null) && (newName != null)) {
-            synchronized (this.fileMap) {
-                /**
-                 * First, remove the file from the "directory" (fileMap).
-                 */
-                if (!this.fileMap.containsKey(newName))
-                {
-                    final File file = this.fileMap.remove(fileName);
-                    if (file != null) {
-                        this.fileMap.put(newName, file);
 
-                        /**
-                         * Since the file has been renamed, notify the clients to invalidate their cached files.
-                         */
-                        ClientCacheManager.getInstance().sendCacheInvalidationEventToAllClients(fileName);
-                    } else {
-                        throw new FileException("No file with name" + fileName + " exists and therefore cannot be renamed.");
-                    }
+        if ((fileName != null) && (newName != null)) {
+
+            /**
+             * First, remove the file from the "directory" (fileMap).
+             */
+            if (!this.fileMap.containsKey(newName)) {
+
+                final File file = this.fileMap.remove(fileName);
+
+                if (file != null) {
+                    this.fileMap.put(newName, file);
+
+                    /**
+                     * Since the file has been renamed, notify the clients to invalidate their cached files.
+                     */
+                    ClientCacheManager.getInstance().sendCacheInvalidationEventToAllClients(fileName);
 
                 } else {
-                    throw new FileException("File with name" + newName + " already exists.");
+                    throw new FileException("No file with name" + fileName + " exists and therefore cannot be renamed.");
+
                 }
+
+            } else {
+                throw new FileException("File with name " + newName + " already exists.");
             }
+
         } else {
             throw new FileException("Both a file name and a new file name are required to rename a file.");
         }
     }
+
 }

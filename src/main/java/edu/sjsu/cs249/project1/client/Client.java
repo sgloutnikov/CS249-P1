@@ -96,9 +96,9 @@ public class Client implements ClientCallback {
      * @param fileName the name of file to be deleted
      */
     public void removeFile(String fileName){
-        System.out.println("Your request to delete: " + fileName + " is completed.");
         // removes and deletes file from Client cache if it exists;
         this.fileMap.remove(fileName);
+        File file = this.fileMap.remove(fileName);
      }
 
     /**

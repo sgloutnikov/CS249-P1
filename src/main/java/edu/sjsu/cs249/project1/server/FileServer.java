@@ -17,11 +17,23 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
 
     public FileServer() throws RemoteException {
         super();
+        String absolutePath = "filesystem/";
+        Path basePath = Paths.get(absolutePath);
+
+        // Check if filesystem path exists, create it does not
+        if(!Files.exists(basePath)) {
+            try {
+                Files.createDirectory(basePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         // Load existing files on the file system.
         System.out.println("Loading existing files on the file system.");
-        String absolutePath = "filesystem/";
+
         try {
-            Files.walkFileTree(Paths.get(absolutePath), new SimpleFileVisitor<Path>() {
+            Files.walkFileTree(basePath, new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) throws IOException {
                     String fileName = file.toFile().getName();
@@ -60,16 +72,6 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
     }
 
     @Override
-    public void hello(String msg) {
-        System.out.println("Client said: " + msg);
-    }
-
-    @Override
-    public String version() {
-        return "Server is running version 0.1";
-    }
-
-    @Override
     /**
      *  List all the files on the server.
      *
@@ -90,19 +92,19 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
      *
      */
 
-    public void createFiles(ClientCallback client, String fileName, byte[] data) throws RemoteException{
-        FileSystem fileSystem=FileSystem.getInstance();
+    public void createFile(ClientCallback client, String fileName, byte[] data) throws RemoteException{
+        FileSystem fileSystem = FileSystem.getInstance();
         try {
             fileSystem.createFile(fileName, data);
-            File file=new File(fileName, data);
         } catch (FileException e) {
             e.printStackTrace();
         }
 
+        // Track client cache
         String clientId = client.getId();
-        Client c = new Client(clientId, client);
+        Client serverClient = ClientCacheManager.getInstance().getClient(clientId);
         try {
-            ClientCacheManager.getInstance().registerCachedFile(c, fileName);
+            ClientCacheManager.getInstance().registerCachedFile(serverClient, fileName);
         } catch (CacheException e) {
             e.printStackTrace();
         }
@@ -114,7 +116,7 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
      *  if existing, search Singleton FileSystem and print file data in byte[] and
      *  register in ClientCacheManager
      */
-    public byte[] openFiles(ClientCallback client, String fileName) throws RemoteException{
+    public byte[] openFile(ClientCallback client, String fileName) throws RemoteException{
         byte[] temp = null;
         FileSystem fileSystem=FileSystem.getInstance();
 
@@ -124,6 +126,7 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
             System.out.println(e.getMessage());
         }
 
+        // Track client cache
         if (temp != null) {
             String clientId = client.getId();
             Client serverClient = ClientCacheManager.getInstance().getClient(clientId);
@@ -146,12 +149,12 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
      *
      *
      */
-    public void removeFiles(ClientCallback client, String fileName) throws RemoteException{
-        FileSystem fileSystem=FileSystem.getInstance();
+    public void removeFile(String fileName) throws RemoteException{
+        FileSystem fileSystem = FileSystem.getInstance();
         try {
             fileSystem.deleteFile(fileName);
         } catch (FileException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
 
     }
@@ -160,7 +163,7 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
      *
      *
      */
-    public void editFiles(ClientCallback client, String fileName, byte[] newData) throws RemoteException{
+    public void editFile(String fileName, byte[] newData) throws RemoteException{
         FileSystem fileSystem=FileSystem.getInstance();
         try {
             fileSystem.modifyFile(fileName, newData);
@@ -170,7 +173,7 @@ public class FileServer extends UnicastRemoteObject implements FileServerService
 
     }
 
-    public void renameFile(ClientCallback client, String fileName, String newFileName) throws RemoteException{
+    public void renameFile(String fileName, String newFileName) throws RemoteException{
         FileSystem fileSystem=FileSystem.getInstance();
         try {
             fileSystem.renameFile(fileName, newFileName);
