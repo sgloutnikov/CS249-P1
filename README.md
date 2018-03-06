@@ -29,11 +29,11 @@ You will find the resulting client jar inside ./build/libs.
 
 * ##### Server
 
-Run the server in the command line with: java -jar <server jar>
+Run the server in the command line with: java -jar server*.jar
 
 * ##### Client
  
-Run the client in the command line with: java -jar <client jar>
+Run the client in the command line with: java -jar client*.jar
  
 When prompted for a port, enter a port that is available on your system.
 
