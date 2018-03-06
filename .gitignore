@@ -1,4 +1,5 @@
 .DS_Store
+filesystem/
 # Created by https://www.gitignore.io/api/gradle,eclipse,netbeans,intellij+iml
 
 ### Eclipse ###

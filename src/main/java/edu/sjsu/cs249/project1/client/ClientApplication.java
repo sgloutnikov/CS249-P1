@@ -131,7 +131,6 @@ public class ClientApplication {
                     }
                     String data = input.substring(input.indexOf(inputs[2]));
                     byte[] contents = data.getBytes(Charset.forName("UTF-8"));
-                    System.out.println("Creating: " + fileName);
                     serverService.createFile(client1, fileName, contents);
                     client1.createFile(fileName, contents);
                     break;
