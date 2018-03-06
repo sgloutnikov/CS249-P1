@@ -44,11 +44,13 @@ public class ClientApplication {
             String command = inputs[0].toLowerCase();
 
             switch (command) {
+                // list out commands
                 case "help": {
                     System.out.println(help);
                     break;
                 }
 
+                // lists out files
                 case "ls": {
                     Set<String> temp = serverService.listFiles(client1);
                     client1.listFiles(temp);
@@ -56,7 +58,7 @@ public class ClientApplication {
                 }
 
                 // this will deliver contents of specified filename either locally (when cached and valid) or remotely
-                //  through server.
+                // through server.
                 case "open": {
                     byte[] temp = null;
                     if (inputs.length < 2) {
@@ -151,8 +153,9 @@ public class ClientApplication {
                     break;
                 }
 
+                // case where no input is entered
                 case "": {
-                    System.out.println("Enter a command. Use 'help' for a list.");
+                    System.out.println("Enter a command. Use 'help' for a list of possible commands.");
                     break;
                 }
 
@@ -164,8 +167,9 @@ public class ClientApplication {
                     break;
                 }
 
-                default:
+                default: {
                     System.out.println("Invalid command: [" + command + "]  Enter 'help' for help.");
+                }
             }
         }
 
