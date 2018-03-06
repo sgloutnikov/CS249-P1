@@ -13,13 +13,13 @@ We use Gradle for build automation. If gradle is not installed on your system yo
 
 Clean the project build paths by running 'gradlew clean'
 
-##### Server
+* ##### Server
 
 To build an executable jar for the Server run: gradlew jarServer
 
 You will find the resulting server jar inside ./build/libs.
 
-##### Client 
+* ##### Client 
 
 To build an executable jar for the Client run: gradlew jarClient
 
