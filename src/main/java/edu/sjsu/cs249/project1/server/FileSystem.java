@@ -218,12 +218,10 @@ public class FileSystem {
     public synchronized void renameFile(final String fileName, final String newName) throws FileException {
 
         if ((fileName != null) && (newName != null)) {
-
             /**
              * First, remove the file from the "directory" (fileMap).
              */
             if (!this.fileMap.containsKey(newName)) {
-
                 final File file = this.fileMap.remove(fileName);
 
                 if (file != null) {
@@ -233,16 +231,12 @@ public class FileSystem {
                      * Since the file has been renamed, notify the clients to invalidate their cached files.
                      */
                     ClientCacheManager.getInstance().sendCacheInvalidationEventToAllClients(fileName);
-
                 } else {
                     throw new FileException("No file with name" + fileName + " exists and therefore cannot be renamed.");
-
                 }
-
             } else {
                 throw new FileException("File with name " + newName + " already exists.");
             }
-
         } else {
             throw new FileException("Both a file name and a new file name are required to rename a file.");
         }

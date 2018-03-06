@@ -26,13 +26,13 @@ public class ClientApplication {
         System.out.println("+ Client Started +");
 
 
-        String help = "Please enter a command. Available commands:\n" +
+        String help = "Available commands:\n" +
                 "ls - Lists the available files\n" +
-                "create <filename> <contents>- create a file with the given name \n"+
+                "create <filename> <contents> - create a file with the given name \n"+
                 "open <filename> - Open a file. The file can be modified. Press return to save and exit\n" +
-                "modify <filename> <new data> - edit a file with new contents and update local cache \n " +
+                "modify <filename> <new data> - edit a file with new contents and update local cache\n" +
                 "rm <filename> - Delete a file\n" +
-                "rename <filename> - Rename a file\n" +
+                "rename <filename> <new filename> - Rename a file\n" +
                 "help - displays this message\n" +
                 "exit - Exits the client\n";
 
@@ -152,7 +152,7 @@ public class ClientApplication {
                 }
 
                 case "": {
-                    System.out.println("Enter an input.");
+                    System.out.println("Enter a command. Use 'help' for a list.");
                     break;
                 }
 

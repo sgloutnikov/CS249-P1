@@ -109,17 +109,14 @@ public class Client implements ClientCallback {
      * @param data      new file's contents in byte array format
      */
      public void createFile(String fileName, byte[] data){
-         System.out.println("Your request to create: " + fileName + " is completed.");
          this.fileMap.put(fileName, new File(data, true));
      }
 
      public void modifyFile(String fileName, byte[] newData){
-         System.out.println("Your request to modify " + fileName + " is completed.");
          this.fileMap.put(fileName, new File(newData, true));
      }
 
     public void renameFile(String fileName, String newName){
-        System.out.println("Your request to rename: " + fileName + " to: " + newName + " is completed.");
         File file = this.fileMap.remove(fileName);
         if (file != null) {
             this.fileMap.put(newName, file);
