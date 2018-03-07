@@ -22,22 +22,18 @@ public class ClientApplication {
         // Prompt for server host and client port
         Scanner scanner = new Scanner(System.in);
         String scannerInput;
-        String host;
-        int port;
-        System.out.print("Enter the server location [localhost]: ");
+        String host = "localhost";
+        System.out.print("Enter the server location or default to [" + host + "]");
         scannerInput = scanner.nextLine();
         if (scannerInput.length() > 1) {
             host = scannerInput;
-        } else {
-            host = "localhost";
         }
         System.out.println("Server host: " + host);
-        System.out.print("Enter a valid/open client port number [2000]: ");
+        int port = 2000;
+        System.out.print("Enter a valid/open client port number or default to [" + port + "]");
         scannerInput = scanner.nextLine();
         if (scannerInput.length() > 1) {
             port = Integer.parseInt(scannerInput);
-        } else {
-            port = 2000;
         }
         System.out.println("Server port: " + port);
 
