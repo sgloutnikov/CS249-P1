@@ -9,7 +9,8 @@ import edu.sjsu.cs249.project1.remote.ClientCallback;
  */
 public class Client {
     private final String name;
-    private ClientCallback callback;
+    private final ClientCallback callback;
+    private boolean isActive;
 
     /**
      * Instantiates a new Client object with the given name.
@@ -19,9 +20,10 @@ public class Client {
      * @param callback
      *            The callback for this client. Used to reach the client from the server.
      */
-    public Client(final String name, ClientCallback callback) {
+    public Client(final String name, final ClientCallback callback) {
         this.name = name;
         this.callback = callback;
+        this.isActive = true;
     }
 
     /*
@@ -51,7 +53,7 @@ public class Client {
      */
     public synchronized void sendCacheInvalidationEvent(final String fileName) {
         try {
-            callback.invalidateCache(fileName);
+            this.callback.invalidateCache(fileName);
         } catch (final Exception e) {
             /**
              * Note: Exceptions need to be handled within this method itself, as we don't want one client failure to
@@ -74,7 +76,28 @@ public class Client {
         return ((str1 != null) && str1.equals(str2)) || ((str1 == null) && (str2 == null));
     }
 
+    /**
+     * Returns the callback associated with this client.
+     *
+     * @return The callback associated with this client.
+     */
     public ClientCallback getCallback() {
-        return callback;
+        return this.callback;
+    }
+
+    /**
+     * Determines if this client is active or not.
+     * 
+     * @return Returns true if this client is active, or false if it has been deactivated.
+     */
+    public boolean isActive() {
+        return this.isActive;
+    }
+
+    /**
+     * Marks this Client as inactive.
+     */
+    public void deactivateClient() {
+        this.isActive = false;
     }
 }

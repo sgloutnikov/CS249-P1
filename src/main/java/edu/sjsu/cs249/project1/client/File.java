@@ -1,36 +1,31 @@
 package edu.sjsu.cs249.project1.client;
 
 /**
- * Represents a File on the Client side.
+ * Represents a File on the Client side. <br/>
+ * Note: Synchronization is not needed here, since a client file is only used by one entity (the client itself).
  */
 public class File {
-
     private byte[] data;
     private boolean isValid;
 
-
-    public File(byte[] data, boolean isValid) {
+    public File(final byte[] data) {
         this.data = data;
-        this.isValid = isValid;
+        this.isValid = true;
     }
 
     public byte[] getData() {
-        return data;
+        return this.data;
     }
 
-    public void setData(byte[] data) {
+    public void setData(final byte[] data) {
         this.data = data;
     }
 
     public boolean isValid() {
-        return isValid;
-    }
-
-    public void setValid(boolean valid) {
-        isValid = valid;
-    }
-
-    public boolean getValidStatus(){
         return this.isValid;
+    }
+
+    public void setValid(final boolean isValid) {
+        this.isValid = isValid;
     }
 }

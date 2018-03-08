@@ -1,42 +1,49 @@
 package edu.sjsu.cs249.project1.client;
 
-import edu.sjsu.cs249.project1.remote.ClientCallback;
-
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
+import edu.sjsu.cs249.project1.remote.ClientCallback;
+
 /**
- * The Client class represents all the operations that a client can perform.
+ * This class represents all the operations that a client can perform.
  */
 public class Client implements ClientCallback {
+    private final String clientId;
 
-    private String clientId;
-    // Client cache map. Any files cached locally are stored here
-    private HashMap<String, File> fileMap;
+    /**
+     * Files cached by the client are stored here.
+     */
+    private final Map<String, File> fileMap = new HashMap<>();
 
-
-    public Client(String clientId) {
+    public Client(final String clientId) {
         this.clientId = clientId;
-        fileMap = new HashMap<>();
     }
 
     /**
      * Invalidate local client cache for the filename provided.
-     * @param file the name of the file to invalidate
+     *
+     * @param fileName
+     *            The name of the file to invalidate.
      */
     @Override
-    public void invalidateCache(String file) {
-        System.out.println("Received cache invalidate from server for " + file);
-        File cachedFile = fileMap.get(file);
-        if (cachedFile != null) {
+    public void invalidateCache(final String fileName) {
+        final File cachedFile = this.fileMap.get(fileName);
+        if ((cachedFile != null) && cachedFile.isValid()) {
+            /**
+             * Mark cached file as invalid. <br/>
+             * Note: we could have also just removed it from the cache.
+             */
             cachedFile.setValid(false);
-            fileMap.put(file, cachedFile);
+            System.out.println("Cached version of \"" + fileName + "\" was invalidated by the server.");
         }
     }
 
     /**
-     * Returns the ID of the client.
-     * @return the client id
+     * Returns the ID of this client.
+     *
+     * @return The ID of this client.
      */
     @Override
     public String getId() {
@@ -44,90 +51,76 @@ public class Client implements ClientCallback {
     }
 
     /**
-     * List all the files residing on the server and assume no authentication is required for any clients
-     * to operate on the files, or error message when no files are stored on the server.
+     * Lists all the files residing on the server, or an informational message when no files are found. <br/>
+     * Assumption: no authentication is required for any clients to operate on the files.
      *
-     * @param set set of filenames returned by remote invocation of listFiles(ClientCallback c) method
+     * @param fileNames
+     *            The set of filenames returned by remote invocation of listFiles(ClientCallback c) method.
      */
-    public void listFiles(Set<String> set) {
-        String result = "";
-        if (set.size() > 0) {
-            for (String s : set) {
-                result = result + s + "\n";
+    public void printFileNames(final Set<String> fileNames) {
+        if ((fileNames != null) && !fileNames.isEmpty()) {
+            final StringBuilder sb = new StringBuilder();
+            boolean isFirst = true;
+            for (final String s : fileNames) {
+                if (!isFirst) {
+                    sb.append("\n");
+                } else {
+                    isFirst = false;
+                }
+                sb.append(s);
             }
-            System.out.println(result);
+            System.out.println(sb.toString());
         } else {
             System.out.println("There are no files on server to list.");
         }
     }
 
     /**
-     * Read/Open a file with given name: if available at local cache, fetch directly based on its validation status,
-     * or access server when not locally cached.
+     * Converts data to a String and prints it to the console.
      *
-     * @param data byte array return from RMI of readFiles() method
+     * @param data
+     *            A byte array returned from RMI of readFiles() method.
      */
-    public void readFiles(byte[] data) {
+    public void printFile(final byte[] data) {
         System.out.println(new String(data));
     }
 
     /**
-     * Get cached file with given based on availability on local cache and its validation status.
+     * Checks the local file cache for the provided fileName and returns such file if it exists and is valid.
      *
      * @param fileName
-     * @return
+     *            The name of the file.
+     * @return If the local cache contains the file, and if the cached file is valid, then the cached file is returned.
+     *         Otherwise, null is returned.
      */
-    public File getCachedFile(String fileName) {
-        if (this.fileMap.containsKey(fileName) && this.fileMap.get(fileName).getValidStatus()) {
-            return this.fileMap.get(fileName);
+    public File getCachedFile(final String fileName) {
+        final File file = this.fileMap.get(fileName);
+        if ((file != null) && file.isValid()) {
+            return file;
         } else {
             return null;
         }
     }
 
     /**
-     * Delete a file with given name and remove local cache if present.
+     * Caches a file in the local client cache. <br/>
+     * If the cache already contains a file with fileName, then the existing file will be updated with data and marked
+     * as valid. <br/>
+     * If the cache does not contain a file with fileName, then a new File object will be created and stored in the
+     * cache using the provided fileName and data.
      *
-     * @param fileName the name of file to be deleted
+     * @param fileName
+     * @param data
      */
-    public void removeFile(String fileName) {
-        // removes and deletes file from Client cache if it exists;
-        this.fileMap.remove(fileName);
-        System.out.println("Deleted " + fileName);
-    }
-
-    /**
-     * Create a file and add to local cache.
-     *
-     * @param fileName new file's name
-     * @param data     new file's contents in byte array format
-     */
-    public void createFile(String fileName, byte[] data) {
-        this.fileMap.put(fileName, new File(data, true));
-        System.out.println("Created " + fileName);
-    }
-
-    /**
-     * Modify the data of an existing file.
-     * @param fileName the name of the file being modified
-     * @param newData the new data
-     */
-    public void modifyFile(String fileName, byte[] newData) {
-        this.fileMap.put(fileName, new File(newData, true));
-        System.out.println("Modified " + fileName);
-    }
-
-    /**
-     * Changes the name of a file to something new.
-     * @param fileName the file being renamed
-     * @param newName the new file name
-     */
-    public void renameFile(String fileName, String newName) {
-        File file = this.fileMap.remove(fileName);
+    public void cacheFile(final String fileName, final byte[] data) {
+        final File file = this.fileMap.get(fileName);
         if (file != null) {
-            this.fileMap.put(newName, file);
+            file.setData(data);
+            file.setValid(true);
+            System.out.println("Updated cached contents of \"" + fileName + "\".");
+        } else {
+            this.fileMap.put(fileName, new File(data));
+            System.out.println("Cached \"" + fileName + "\".");
         }
-        System.out.println("Renamed " + fileName + " to " + newName);
     }
 }
-

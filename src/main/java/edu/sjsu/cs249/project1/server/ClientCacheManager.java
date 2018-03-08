@@ -1,8 +1,5 @@
 package edu.sjsu.cs249.project1.server;
 
-import edu.sjsu.cs249.project1.remote.ClientCallback;
-
-import java.rmi.RemoteException;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -24,8 +21,7 @@ public class ClientCacheManager {
     private final Map<String, Set<Client>> clientCacheMap = new ConcurrentHashMap<>();
 
     /**
-     * Structure: client ID -> client. Anyone registered with the server is tracked here.
-     *
+     * Structure: client ID -> Client wrapper object.
      */
     private final Map<String, Client> registeredClientsMap = new ConcurrentHashMap<>();
 
@@ -58,7 +54,8 @@ public class ClientCacheManager {
      * @throws CacheException
      *             If client or fileName are passed as null.
      */
-    public void registerCachedFile(final Client client, final String fileName) throws CacheException {
+    public void registerCachedFile(final String clientId, final String fileName) throws CacheException {
+        final Client client = clientId != null ? this.registeredClientsMap.get(clientId) : null;
         if ((client != null) && (fileName != null)) {
             synchronized (this.clientCacheMap) {
                 /**
@@ -84,10 +81,11 @@ public class ClientCacheManager {
         } else {
             throw new CacheException("Client and file name are required to register a cache event.");
         }
+
     }
 
     /**
-     * Sends an invalidation event to all clients which have the given file cached. All clients need to DELETE their
+     * Sends an invalidation event to all clients which have the given file cached. All clients need to invalidate their
      * cached copy.
      *
      * @param fileName
@@ -98,41 +96,77 @@ public class ClientCacheManager {
         final Set<Client> clients = this.clientCacheMap.get(fileName);
         if (clients != null) {
             for (final Client client : clients) {
-                /**
-                 * Asynchronously send a cache invalidation event to each client.
-                 */
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        client.sendCacheInvalidationEvent(fileName);
-                    }
-                }).start();
+                if (client.isActive()) {
+                    /**
+                     * Asynchronously send a cache invalidation event to each active client.
+                     */
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            client.sendCacheInvalidationEvent(fileName);
+                        }
+                    }).start();
+                }
             }
         }
     }
 
-    public void registerClient(String id, Client client) throws CacheException {
-        if (id != null && client != null) {
-            this.registeredClientsMap.put(id, client);
-            System.out.println("Client Registered: " + id + " with callback: " + client.getCallback());
+    /**
+     * Registers a client with the server. <br/>
+     * Note: this method uses synchronization at the object level to handle the following scenarios: <br/>
+     * 1. Multiple registrations happening concurrently with the same ID. <br/>
+     * 2. A registration event occurring concurrently with an unregister event which happen to be using the same client
+     * ID in both events.
+     *
+     * @param id
+     *            The ID of the client.
+     * @param client
+     *            The client wrapper.
+     * @throws CacheException
+     *             If id or client are passed as null.
+     */
+    public void registerClient(final String id, final Client client) throws CacheException {
+        if ((id != null) && (client != null)) {
+            synchronized (this.registeredClientsMap) {
+                if (!this.registeredClientsMap.containsKey(id)) {
+                    this.registeredClientsMap.put(id, client);
+                    System.out.println("Client registered with ID \"" + id + "\" and callback: \""
+                            + client.getCallback() + "\".");
+                } else {
+                    throw new CacheException("Client is already registered with ID \"" + id + "\".");
+                }
+            }
         } else {
             throw new CacheException("ID and Client are required to register a client.");
         }
     }
 
-    public void unregisterClient(String id) throws CacheException {
+    /**
+     * Unregisters a client with the server. <br/>
+     * Note: this method is synchronized at the method level to handle the scenario where multiple unregisterClient()
+     * calls are made concurrently using the same ID.
+     *
+     * @param id
+     *            The ID of the client to unregister.
+     * @throws CacheException
+     *             If id is null or is not currently registered with the server.
+     */
+    public synchronized void unregisterClient(final String id) throws CacheException {
         if (id != null) {
-            this.registeredClientsMap.remove(id);
-            System.out.println("Client Unregistered: " + id);
-            System.out.println("Now tracking " + registeredClientsMap.size() + " clients.");
+            if (this.registeredClientsMap.containsKey(id)) {
+                /**
+                 * Note: we both remove the client from the registration map as well as mark it as inactive. <br/>
+                 * Marking as inactive is required so that clientCacheMap is essentially aware of the removal from
+                 * registeredClientsMap.
+                 */
+                this.registeredClientsMap.remove(id).deactivateClient();
+                System.out.println("Client Unregistered: " + id);
+                System.out.println("Now tracking " + this.registeredClientsMap.size() + " clients.");
+            } else {
+                throw new CacheException("ID \"" + id + "\" is not currently registered with the server.");
+            }
         } else {
             throw new CacheException("ID is required to unregister a client.");
         }
     }
-
-
-    public Client getClient(String clientId){
-        return registeredClientsMap.get(clientId);
-    }
-
 }
